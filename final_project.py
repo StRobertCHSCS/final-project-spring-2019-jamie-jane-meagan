@@ -37,6 +37,7 @@ class Seal(arcade.Sprite):
 
         if self.top > SCREEN_HEIGHT:
             self.change_y *= -1
+
 class Shrimps(arcade.Sprite):
 
     def __init__(self, filename, sprite_scaling):
