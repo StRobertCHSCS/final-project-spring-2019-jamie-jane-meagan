@@ -86,16 +86,16 @@ class MyGame(arcade.Window):
     def on_key_press(self, key, modifiers):
         # Pull down the apple to the ground
         if key == arcade.key.UP:
-            self.player_sprite.center_y += 10
+            self.player_sprite.center_y += 20
 
         if key == arcade.key.LEFT:
-            self.player_sprite.center_x -= 10
+            self.player_sprite.center_x -= 20
 
         if key == arcade.key.RIGHT:
-            self.player_sprite.center_x += 10
+            self.player_sprite.center_x += 20
 
         if key == arcade.key.DOWN:
-            self.player_sprite.center_y -= 10
+            self.player_sprite.center_y -= 20
 
 
 def main():
