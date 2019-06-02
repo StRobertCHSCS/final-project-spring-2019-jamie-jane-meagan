@@ -248,13 +248,13 @@ class MyGame(arcade.Window):
 
         if len(self.shrimps_list) == 0:
             arcade.draw_rectangle_filled(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
-                                          SCREEN_WIDTH, SCREEN_HEIGHT, arcade.color.BLUE)
-            arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.WHITE, 30)
+                                          SCREEN_WIDTH, SCREEN_HEIGHT, arcade.color.WHEAT)
+            arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.BLUE, 30)
 
         if len(self.trash_list) == 0:
             arcade.draw_rectangle_filled(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
-                                         SCREEN_WIDTH, SCREEN_HEIGHT, arcade.color.RED)
-            arcade.draw_text("GAME OVER", 470, 400, arcade.color.WHITE, 30)
+                                         SCREEN_WIDTH, SCREEN_HEIGHT, arcade.color.BLUE)
+            arcade.draw_text("GAME OVER", 300, 400, arcade.color.RED, 75)
 
 
     def on_key_press(self, key, modifiers):
@@ -272,34 +272,30 @@ class MyGame(arcade.Window):
             self.player_sprite.center_y -= 45
 
     def update(self, delta_time):
-        if len(self.shrimps_list) > 0:
+        if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and len(self.fish_list) > 0:
             self.shrimps_list.update()
-
-        if len(self.trash_list) > 0:
             self.trash_list.update()
-
-        if len(self.fish_list) > 0:
             self.fish_list.update()
 
-        shrimps_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.shrimps_list)
-        trash_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.trash_list)
-        fish_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.fish_list)
+            shrimps_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.shrimps_list)
+            trash_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.trash_list)
+            fish_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.fish_list)
 
-        # Loop through each colliding sprite, remove it, and add to the score.
-        for shrimp in shrimps_hit_list:
-            shrimp.kill()
-            self.score += 1
-            os.system("afplay shrimps.mp3&")
+            # Loop through each colliding sprite, remove it, and add to the score.
+            for shrimp in shrimps_hit_list:
+                shrimp.kill()
+                self.score += 1
+                os.system("afplay shrimps.mp3&")
 
-        for trash in trash_hit_list:
-            trash.kill()
-            self.score -= 1
-            os.system("afplay trash.mp3&")
+            for trash in trash_hit_list:
+                trash.kill()
+                self.score -= 1
+                os.system("afplay trash.mp3&")
 
-        for fish in fish_hit_list:
-            fish.kill()
-            self.score += 10
-            os.system("afplay fish.mp3&")
+            for fish in fish_hit_list:
+                fish.kill()
+                self.score += 10
+                os.system("afplay fish.mp3&")
 
 
 def main():
