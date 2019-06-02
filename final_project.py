@@ -246,10 +246,10 @@ class MyGame(arcade.Window):
         output = f"Score: {self.score}"
         arcade.draw_text(output, 10, 20, arcade.color.WHITE, 17)
 
-        if len(self.shrimps_list) == 0:
+        if len(self.shrimps_list) == 0 or self.score >= 30:
             arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.BLUE, 30)
 
-        if len(self.trash_list) == 0:
+        if len(self.trash_list) == 0 or self.score <= -3:
             arcade.draw_text("GAME OVER!", 300, 400, arcade.color.RED, 75)
 
     def on_key_press(self, key, modifiers):
@@ -267,7 +267,7 @@ class MyGame(arcade.Window):
             self.player_sprite.center_y -= 45
 
     def update(self, delta_time):
-        if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and len(self.fish_list) > 0:
+        if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and len(self.fish_list) > 0 and self.score > -3 and self.score < 30:
             self.shrimps_list.update()
             self.trash_list.update()
             self.fish_list.update()
