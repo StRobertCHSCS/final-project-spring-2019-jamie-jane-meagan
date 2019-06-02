@@ -128,6 +128,7 @@ class MyGame(arcade.Window):
         # Call the parent class initializer
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Seal and Shrimps")
 
+        # background
         self.background = None
 
         # Variables that will hold sprite lists
@@ -144,11 +145,10 @@ class MyGame(arcade.Window):
         # Don't show the mouse cursor
         self.set_mouse_visible(False)
 
+        self.background = arcade.load_texture("images/background.jpg")
 
     def setup(self):
         """ Set up the game and initialize the variables. """
-
-        self.background = arcade.load_texture("images/background.jpg")
 
         # Sprite lists
         self.wall_list = arcade.SpriteList()
@@ -156,6 +156,16 @@ class MyGame(arcade.Window):
         self.seal_list = arcade.SpriteList()
         self.trash_list = arcade.SpriteList()
         self.fish_list = arcade.SpriteList()
+
+        # Score
+        self.score = 0
+
+        # Set up the player
+        # Character images
+        self.player_sprite = arcade.Sprite("images/seal.png", SPRITE_SCALING_SEAL)
+        self.player_sprite.center_x = 1150
+        self.player_sprite.center_y = 100
+        self.seal_list.append(self.player_sprite)
 
         # Manually create and position a rock at 180, 85
         wall = arcade.Sprite("images/rock.png", SPRITE_SCALING_ROCK)
@@ -220,20 +230,9 @@ class MyGame(arcade.Window):
             # add the fish to the lists
             self.fish_list.append(fish)
 
-        # Score
-        self.score = 0
-
-        # Set up the player
-        # Character images
-        self.player_sprite = arcade.Sprite("images/seal.png", SPRITE_SCALING_SEAL)
-        self.player_sprite.center_x = 1150
-        self.player_sprite.center_y = 100
-        self.seal_list.append(self.player_sprite)
-
 
     def on_draw(self):
         """ Draw everything """
-
         arcade.start_render()
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
                                       SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
@@ -243,19 +242,15 @@ class MyGame(arcade.Window):
         self.trash_list.draw()
         self.fish_list.draw()
 
+        # put the text on the screen
         output = f"Score: {self.score}"
         arcade.draw_text(output, 10, 20, arcade.color.WHITE, 17)
 
         if len(self.shrimps_list) == 0:
-            arcade.draw_rectangle_filled(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
-                                          SCREEN_WIDTH, SCREEN_HEIGHT, arcade.color.WHEAT)
             arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.BLUE, 30)
 
         if len(self.trash_list) == 0:
-            arcade.draw_rectangle_filled(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
-                                         SCREEN_WIDTH, SCREEN_HEIGHT, arcade.color.BLUE)
-            arcade.draw_text("GAME OVER", 300, 400, arcade.color.RED, 75)
-
+            arcade.draw_text("GAME OVER!", 300, 400, arcade.color.RED, 75)
 
     def on_key_press(self, key, modifiers):
         # Pull down the apple to the ground
@@ -277,6 +272,7 @@ class MyGame(arcade.Window):
             self.trash_list.update()
             self.fish_list.update()
 
+            # generate a list of all sprites that collided with the player
             shrimps_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.shrimps_list)
             trash_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.trash_list)
             fish_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.fish_list)
