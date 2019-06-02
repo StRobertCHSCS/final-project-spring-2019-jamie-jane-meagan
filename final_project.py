@@ -142,8 +142,8 @@ class MyGame(arcade.Window):
         # Don't show the mouse cursor
         self.set_mouse_visible(False)
 
-        #arcade.set_background_color(arcade.color.SKY_BLUE)
-        arcade.get_image("images/background.jpg")
+        arcade.set_background_color(arcade.color.SKY_BLUE)
+        #arcade.get_image("images/background.jpg")
 
     def setup(self):
         """ Set up the game and initialize the variables. """
