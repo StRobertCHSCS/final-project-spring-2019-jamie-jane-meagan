@@ -287,6 +287,7 @@ class MyGame(arcade.Window):
         for shrimp in shrimps_hit_list:
             shrimp.kill()
             self.score += 1
+            os.system("afplay shrimps.mp3&")
 
         for trash in trash_hit_list:
             trash.kill()
@@ -295,6 +296,7 @@ class MyGame(arcade.Window):
         for fish in fish_hit_list:
             fish.kill()
             self.score += 10
+            os.system("afplay fish.mp3&")
 
 
 def main():
