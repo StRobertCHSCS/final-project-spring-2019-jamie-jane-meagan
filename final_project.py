@@ -244,7 +244,7 @@ class MyGame(arcade.Window):
         self.fish_list.draw()
 
         output = f"Score: {self.score}"
-        arcade.draw_text(output, 10, 20, arcade.color.WHITE, 14)
+        arcade.draw_text(output, 10, 20, arcade.color.WHITE, 17)
 
         if len(self.shrimps_list) == 0:
             arcade.set_background_color(arcade.color.BLUE)
