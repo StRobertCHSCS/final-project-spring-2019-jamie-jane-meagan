@@ -256,7 +256,7 @@ class MyGame(arcade.Window):
         if len(self.shrimps_list) == 0 or self.score >= 30:
             arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.BLUE, 30)
 
-        if len(self.trash_list) == 0 or self.score <= -3:
+        if len(self.trash_list) == 0 or self.score <= -3 or self.lives == 0:
             arcade.draw_text("GAME OVER!", 300, 400, arcade.color.RED, 75)
 
     def on_key_press(self, key, modifiers):
