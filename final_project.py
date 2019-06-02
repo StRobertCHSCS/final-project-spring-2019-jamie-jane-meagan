@@ -267,7 +267,7 @@ class MyGame(arcade.Window):
             self.player_sprite.center_y -= 45
 
     def update(self, delta_time):
-        if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and len(self.fish_list) > 0 and self.score > -3 and self.score < 30:
+        if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and self.score > -3 and self.score < 30:
             self.shrimps_list.update()
             self.trash_list.update()
             self.fish_list.update()
