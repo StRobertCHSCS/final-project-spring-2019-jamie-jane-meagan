@@ -3,12 +3,14 @@ import arcade
 import math
 import os
 
-SPRITE_SCALING_SEAL = 0.2
+SPRITE_SCALING_SEAL = 0.4
 SPRITE_SCALING_SHRIMPS = 0.2
-SPRITE_SCALING_TRASH = 0.1
+SPRITE_SCALING_TRASH = 0.08
+SPRITE_SCALING_FISH = 0.1
 
 SHRIMPS_COUNT = 30
 TRASH_COUNT = 15
+FISH_COUNT = 2
 
 SCREEN_WIDTH = 1250
 SCREEN_HEIGHT = 800
@@ -52,7 +54,7 @@ class Shrimps(arcade.Sprite):
         self.circle_radius = 0
 
         # How fast to orbit, in radians per frame
-        self.circle_speed = 0.008
+        self.circle_speed = 0.01
 
         # Set the center of the point we will orbit around
         self.circle_center_x = 0
@@ -97,6 +99,25 @@ class Trash(arcade.Sprite):
         if self.top > SCREEN_HEIGHT:
             self.change_y *= -1
 
+class Fish(arcade.Sprite):
+
+    def __init__(self, filename, sprite_scaling):
+        super().__init__(filename, sprite_scaling)
+
+    def update(self):
+        # move the fish
+        self.center_y -= 1
+
+        # see if the fish have fallen off the bottom of the screen
+        # if so, reset it
+        if self.top < 0:
+            self.reset_pos()
+
+    def reset_pos(self):
+        # reset the fish to a random spot above the screen
+        self.center_y = random.randrange(SCREEN_HEIGHT + 20, SCREEN_HEIGHT + 100)
+        self.center_x = random.randrange(SCREEN_WIDTH)
+
 class MyGame(arcade.Window):
     """ Our custom Window Class"""
 
@@ -109,6 +130,7 @@ class MyGame(arcade.Window):
         self.shrimps_list = None
         self.seal_list = None
         self.trash_list = None
+        self.fish_list = None
 
         # Set up the player info
         self.player_sprite = None
@@ -126,6 +148,7 @@ class MyGame(arcade.Window):
         self.shrimps_list = arcade.SpriteList()
         self.seal_list = arcade.SpriteList()
         self.trash_list = arcade.SpriteList()
+        self.fish_list = arcade.SpriteList()
 
         # Create the shrimps
         for i in range(SHRIMPS_COUNT):
@@ -160,6 +183,18 @@ class MyGame(arcade.Window):
             # Add the trash to the lists
             self.trash_list.append(trash)
 
+        for i in range(FISH_COUNT):
+            # Create the fish instance
+            # Fish image
+            fish = Fish("images/fish.png", SPRITE_SCALING_FISH)
+
+            # position the fish
+            fish.center_x = random.randrange(SCREEN_WIDTH)
+            fish.center_y = random.randrange(SCREEN_HEIGHT)
+
+            # add the fish to the lists
+            self.fish_list.append(fish)
+
         # Score
         self.score = 0
 
@@ -177,7 +212,7 @@ class MyGame(arcade.Window):
         self.seal_list.draw()
         self.shrimps_list.draw()
         self.trash_list.draw()
-
+        self.fish_list.draw()
 
     def on_key_press(self, key, modifiers):
         # Pull down the apple to the ground
@@ -199,6 +234,9 @@ class MyGame(arcade.Window):
 
         if len(self.trash_list) > 0:
             self.trash_list.update()
+
+        if len(self.fish_list) > 0:
+            self.fish_list.update()
 
 
 def main():
