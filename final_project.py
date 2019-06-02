@@ -150,7 +150,6 @@ class MyGame(arcade.Window):
 
         self.background = arcade.load_texture("images/background.jpg")
 
-
         # Sprite lists
         self.wall_list = arcade.SpriteList()
         self.shrimps_list = arcade.SpriteList()
@@ -238,6 +237,17 @@ class MyGame(arcade.Window):
         self.trash_list.draw()
         self.fish_list.draw()
 
+        output = f"Score: {self.score}"
+        arcade.draw_text(output, 10, 20, arcade.color.WHITE, 14)
+
+        if len(self.shrimps_list) == 0:
+            arcade.set_background_color(arcade.color.BLUE)
+            arcade.draw_text("CONGRATULATIONS, YOU WON!", 200, 330, arcade.color.WHITE, 30)
+
+        if len(self.trash_list) == 0:
+            arcade.set_background_color(arcade.color.RED)
+            arcade.draw_text("GAME OVER", 270, 330, arcade.color.WHITE, 30)
+
 
     def on_key_press(self, key, modifiers):
         # Pull down the apple to the ground
@@ -262,6 +272,23 @@ class MyGame(arcade.Window):
 
         if len(self.fish_list) > 0:
             self.fish_list.update()
+
+        shrimps_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.shrimps_list)
+        trash_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.trash_list)
+        fish_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.fish_list)
+
+        # Loop through each colliding sprite, remove it, and add to the score.
+        for shrimp in shrimps_hit_list:
+            shrimp.kill()
+            self.score += 1
+
+        for trash in trash_hit_list:
+            trash.kill()
+            self.score -= 1
+
+        for fish in fish_hit_list:
+            fish.kill()
+            self.score += 1
 
 
 
