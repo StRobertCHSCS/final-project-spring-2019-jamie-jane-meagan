@@ -3,10 +3,12 @@ import arcade
 import math
 import os
 
+SPRITE_SCALING_ROCK = 0.5
 SPRITE_SCALING_SEAL = 0.3
 SPRITE_SCALING_SHRIMPS = 0.2
 SPRITE_SCALING_TRASH = 0.08
 SPRITE_SCALING_FISH = 0.1
+
 
 SHRIMPS_COUNT = 30
 TRASH_COUNT = 15
@@ -127,6 +129,7 @@ class MyGame(arcade.Window):
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Seal and Shrimps")
 
         # Variables that will hold sprite lists
+        self.wall_list = None
         self.shrimps_list = None
         self.seal_list = None
         self.trash_list = None
@@ -139,16 +142,30 @@ class MyGame(arcade.Window):
         # Don't show the mouse cursor
         self.set_mouse_visible(False)
 
-        arcade.set_background_color(arcade.color.SKY_BLUE)
+        #arcade.set_background_color(arcade.color.SKY_BLUE)
+        arcade.get_image("images/background.jpg")
 
     def setup(self):
         """ Set up the game and initialize the variables. """
 
         # Sprite lists
+        self.wall_list = arcade.SpriteList()
         self.shrimps_list = arcade.SpriteList()
         self.seal_list = arcade.SpriteList()
         self.trash_list = arcade.SpriteList()
         self.fish_list = arcade.SpriteList()
+
+        # Manually create and position a rock at
+        wall = arcade.Sprite("images/rock.png", SPRITE_SCALING_ROCK)
+        wall.center_x = 300
+        wall.center_y = 200
+        self.wall_list.append(wall)
+
+        # Manually creat and position a box at 364, 200
+        wall = arcade.Sprite("images/rock.png", SPRITE_SCALING_ROCK)
+        wall.center_x = 364
+        wall.center_y = 200
+        self.wall_list.append(wall)
 
         # Create the shrimps
         for i in range(SHRIMPS_COUNT):
@@ -209,6 +226,7 @@ class MyGame(arcade.Window):
     def on_draw(self):
         """ Draw everything """
         arcade.start_render()
+        self.wall_list.draw()
         self.seal_list.draw()
         self.shrimps_list.draw()
         self.trash_list.draw()
@@ -237,6 +255,7 @@ class MyGame(arcade.Window):
 
         if len(self.fish_list) > 0:
             self.fish_list.update()
+
 
 
 def main():
