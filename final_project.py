@@ -247,27 +247,29 @@ class MyGame(arcade.Window):
         arcade.draw_text(output, 10, 20, arcade.color.WHITE, 17)
 
         if len(self.shrimps_list) == 0:
-            arcade.set_background_color(arcade.color.BLUE)
-            arcade.draw_text("CONGRATULATIONS, YOU WON!", 200, 330, arcade.color.WHITE, 30)
+            arcade.draw_rectangle_filled(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                          SCREEN_WIDTH, SCREEN_HEIGHT, arcade.color.BLUE)
+            arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.WHITE, 30)
 
         if len(self.trash_list) == 0:
-            arcade.set_background_color(arcade.color.RED)
-            arcade.draw_text("GAME OVER", 270, 330, arcade.color.WHITE, 30)
+            arcade.draw_rectangle_filled(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                         SCREEN_WIDTH, SCREEN_HEIGHT, arcade.color.RED)
+            arcade.draw_text("GAME OVER", 470, 400, arcade.color.WHITE, 30)
 
 
     def on_key_press(self, key, modifiers):
         # Pull down the apple to the ground
         if key == arcade.key.UP:
-            self.player_sprite.center_y += 35
+            self.player_sprite.center_y += 45
 
         if key == arcade.key.LEFT:
-            self.player_sprite.center_x -= 35
+            self.player_sprite.center_x -= 45
 
         if key == arcade.key.RIGHT:
-            self.player_sprite.center_x += 35
+            self.player_sprite.center_x += 45
 
         if key == arcade.key.DOWN:
-            self.player_sprite.center_y -= 35
+            self.player_sprite.center_y -= 45
 
     def update(self, delta_time):
         if len(self.shrimps_list) > 0:
@@ -292,6 +294,7 @@ class MyGame(arcade.Window):
         for trash in trash_hit_list:
             trash.kill()
             self.score -= 1
+            os.system("afplay trash.mp3&")
 
         for fish in fish_hit_list:
             fish.kill()
