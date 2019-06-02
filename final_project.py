@@ -128,6 +128,8 @@ class MyGame(arcade.Window):
         # Call the parent class initializer
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Seal and Shrimps")
 
+        self.background = None
+
         # Variables that will hold sprite lists
         self.wall_list = None
         self.shrimps_list = None
@@ -142,10 +144,12 @@ class MyGame(arcade.Window):
         # Don't show the mouse cursor
         self.set_mouse_visible(False)
 
-        arcade.set_background_color(arcade.color.SKY_BLUE)
 
     def setup(self):
         """ Set up the game and initialize the variables. """
+
+        self.background = arcade.load_texture("images/background.jpg")
+
 
         # Sprite lists
         self.wall_list = arcade.SpriteList()
@@ -154,16 +158,22 @@ class MyGame(arcade.Window):
         self.trash_list = arcade.SpriteList()
         self.fish_list = arcade.SpriteList()
 
-        # Manually create and position a rock at
+        # Manually create and position a rock at 180, 85
         wall = arcade.Sprite("images/rock.png", SPRITE_SCALING_ROCK)
-        wall.center_x = 300
-        wall.center_y = 200
+        wall.center_x = 180
+        wall.center_y = 85
         self.wall_list.append(wall)
 
-        # Manually creat and position a box at 364, 200
+        # Manually creat and position a box at 1100, 240
         wall = arcade.Sprite("images/rock.png", SPRITE_SCALING_ROCK)
-        wall.center_x = 364
-        wall.center_y = 200
+        wall.center_x = 1100
+        wall.center_y = 220
+        self.wall_list.append(wall)
+
+        # Manually create and position a rock at
+        wall = arcade.Sprite("images/rock.png", SPRITE_SCALING_ROCK)
+        wall.center_x = 243
+        wall.center_y = 38
         self.wall_list.append(wall)
 
         # Create the shrimps
@@ -224,12 +234,16 @@ class MyGame(arcade.Window):
 
     def on_draw(self):
         """ Draw everything """
+
         arcade.start_render()
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                      SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
         self.wall_list.draw()
         self.seal_list.draw()
         self.shrimps_list.draw()
         self.trash_list.draw()
         self.fish_list.draw()
+
 
     def on_key_press(self, key, modifiers):
         # Pull down the apple to the ground
@@ -255,12 +269,12 @@ class MyGame(arcade.Window):
         if len(self.fish_list) > 0:
             self.fish_list.update()
 
+
 def main():
     """ Main method """
     window = MyGame()
     window.setup()
     arcade.run()
-
 
 if __name__ == "__main__":
     main()
