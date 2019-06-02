@@ -142,6 +142,9 @@ class MyGame(arcade.Window):
         self.player_sprite = None
         self.score = 0
 
+        # set up the lives that the player is given
+        self.lives = 3
+
         # Don't show the mouse cursor
         self.set_mouse_visible(False)
 
@@ -243,13 +246,17 @@ class MyGame(arcade.Window):
         self.fish_list.draw()
 
         # put the text on the screen
+        output_2 = f"Lives: {self.lives}"
+        arcade.draw_text(output_2, 10, 45, arcade.color.RED, 17)
+
+        # put the text on the screen
         output = f"Score: {self.score}"
         arcade.draw_text(output, 10, 20, arcade.color.WHITE, 17)
 
-        if len(self.shrimps_list) == 0:
+        if len(self.shrimps_list) == 0 or self.score >= 30:
             arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.BLUE, 30)
 
-        if len(self.trash_list) == 0:
+        if len(self.trash_list) == 0 or self.score <= -3:
             arcade.draw_text("GAME OVER!", 300, 400, arcade.color.RED, 75)
 
     def on_key_press(self, key, modifiers):
@@ -267,7 +274,7 @@ class MyGame(arcade.Window):
             self.player_sprite.center_y -= 45
 
     def update(self, delta_time):
-        if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and len(self.fish_list) > 0:
+        if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and self.score > -3 and self.score < 30:
             self.shrimps_list.update()
             self.trash_list.update()
             self.fish_list.update()
@@ -292,6 +299,7 @@ class MyGame(arcade.Window):
                 fish.kill()
                 self.score += 10
                 os.system("afplay fish.mp3&")
+
 
 
 def main():
