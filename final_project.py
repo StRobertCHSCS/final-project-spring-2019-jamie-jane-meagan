@@ -258,16 +258,16 @@ class MyGame(arcade.Window):
     def on_key_press(self, key, modifiers):
         # Pull down the apple to the ground
         if key == arcade.key.UP:
-            self.player_sprite.center_y += 20
+            self.player_sprite.center_y += 35
 
         if key == arcade.key.LEFT:
-            self.player_sprite.center_x -= 20
+            self.player_sprite.center_x -= 35
 
         if key == arcade.key.RIGHT:
-            self.player_sprite.center_x += 20
+            self.player_sprite.center_x += 35
 
         if key == arcade.key.DOWN:
-            self.player_sprite.center_y -= 20
+            self.player_sprite.center_y -= 35
 
     def update(self, delta_time):
         if len(self.shrimps_list) > 0:
@@ -294,7 +294,7 @@ class MyGame(arcade.Window):
 
         for fish in fish_hit_list:
             fish.kill()
-            self.score += 1
+            self.score += 10
 
 
 def main():
