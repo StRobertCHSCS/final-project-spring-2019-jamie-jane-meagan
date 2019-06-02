@@ -157,16 +157,22 @@ class MyGame(arcade.Window):
         self.trash_list = arcade.SpriteList()
         self.fish_list = arcade.SpriteList()
 
-        # Manually create and position a rock at
+        # Manually create and position a rock at 180, 85
         wall = arcade.Sprite("images/rock.png", SPRITE_SCALING_ROCK)
-        wall.center_x = 300
-        wall.center_y = 200
+        wall.center_x = 180
+        wall.center_y = 85
         self.wall_list.append(wall)
 
-        # Manually creat and position a box at 364, 200
+        # Manually creat and position a box at 1100, 240
         wall = arcade.Sprite("images/rock.png", SPRITE_SCALING_ROCK)
-        wall.center_x = 364
-        wall.center_y = 200
+        wall.center_x = 1100
+        wall.center_y = 220
+        self.wall_list.append(wall)
+
+        # Manually create and position a rock at
+        wall = arcade.Sprite("images/rock.png", SPRITE_SCALING_ROCK)
+        wall.center_x = 243
+        wall.center_y = 38
         self.wall_list.append(wall)
 
         # Create the shrimps
@@ -291,13 +297,11 @@ class MyGame(arcade.Window):
             self.score += 1
 
 
-
 def main():
     """ Main method """
     window = MyGame()
     window.setup()
     arcade.run()
-
 
 if __name__ == "__main__":
     main()
