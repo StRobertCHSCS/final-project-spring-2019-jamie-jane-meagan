@@ -3,7 +3,7 @@ import arcade
 import math
 import os
 
-SPRITE_SCALING_SEAL = 0.4
+SPRITE_SCALING_SEAL = 0.3
 SPRITE_SCALING_SHRIMPS = 0.2
 SPRITE_SCALING_TRASH = 0.08
 SPRITE_SCALING_FISH = 0.1
@@ -201,8 +201,8 @@ class MyGame(arcade.Window):
         # Set up the player
         # Character images
         self.player_sprite = arcade.Sprite("images/seal.png", SPRITE_SCALING_SEAL)
-        self.player_sprite.center_x = 120
-        self.player_sprite.center_y = 120
+        self.player_sprite.center_x = 1150
+        self.player_sprite.center_y = 100
         self.seal_list.append(self.player_sprite)
 
 
