@@ -128,6 +128,8 @@ class MyGame(arcade.Window):
         # Call the parent class initializer
         super().__init__(SCREEN_WIDTH, SCREEN_HEIGHT, "Seal and Shrimps")
 
+        self.background = None
+
         # Variables that will hold sprite lists
         self.wall_list = None
         self.shrimps_list = None
@@ -142,11 +144,12 @@ class MyGame(arcade.Window):
         # Don't show the mouse cursor
         self.set_mouse_visible(False)
 
-        arcade.set_background_color(arcade.color.SKY_BLUE)
-        #arcade.get_image("images/background.jpg")
 
     def setup(self):
         """ Set up the game and initialize the variables. """
+
+        self.background = arcade.load_texture("images/background.jpg")
+
 
         # Sprite lists
         self.wall_list = arcade.SpriteList()
@@ -225,12 +228,16 @@ class MyGame(arcade.Window):
 
     def on_draw(self):
         """ Draw everything """
+
         arcade.start_render()
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                      SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
         self.wall_list.draw()
         self.seal_list.draw()
         self.shrimps_list.draw()
         self.trash_list.draw()
         self.fish_list.draw()
+
 
     def on_key_press(self, key, modifiers):
         # Pull down the apple to the ground
