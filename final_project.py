@@ -255,8 +255,6 @@ class MyGame(arcade.Window):
         if len(self.fish_list) > 0:
             self.fish_list.update()
 
-
-
 def main():
     """ Main method """
     window = MyGame()
