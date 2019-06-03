@@ -9,7 +9,6 @@ SPRITE_SCALING_SHRIMPS = 0.2
 SPRITE_SCALING_TRASH = 0.08
 SPRITE_SCALING_FISH = 0.1
 
-
 SHRIMPS_COUNT = 30
 TRASH_COUNT = 15
 FISH_COUNT = 2
@@ -141,8 +140,6 @@ class MyGame(arcade.Window):
         # Set up the player info
         self.player_sprite = None
         self.score = 0
-
-        # set up the lives that the player is given
         self.lives = 3
 
         # Don't show the mouse cursor
@@ -187,6 +184,16 @@ class MyGame(arcade.Window):
         wall.center_x = 243
         wall.center_y = 38
         self.wall_list.append(wall)
+
+        # lives
+        self.lives = 3
+        cur_pos = 10
+        for i in range(self.lives):
+            life = arcade.Sprite("images/lives.png", 0.5)
+            life.center_x = cur_pos + life.width
+            life.center_y = 765
+            cur_pos += life.width
+            self.wall_list.append(life)
 
         # Create the shrimps
         for i in range(SHRIMPS_COUNT):
@@ -246,10 +253,6 @@ class MyGame(arcade.Window):
         self.fish_list.draw()
 
         # put the text on the screen
-        output_2 = f"Lives: {self.lives}"
-        arcade.draw_text(output_2, 10, 45, arcade.color.RED, 17)
-
-        # put the text on the screen
         output = f"Score: {self.score}"
         arcade.draw_text(output, 10, 20, arcade.color.WHITE, 17)
 
@@ -299,8 +302,6 @@ class MyGame(arcade.Window):
                 fish.kill()
                 self.score += 10
                 os.system("afplay fish.mp3&")
-
-
 
 def main():
     """ Main method """
