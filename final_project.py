@@ -351,7 +351,7 @@ class MyGame(arcade.Window):
                 self.setup()
 
     def update(self, delta_time):
-        if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and self.score < 50 and self.total_time > 0.0:
+        if self.current_state == GAMEPLAY:
             self.shrimps_list.update()
             self.trash_list.update()
             self.fish_list.update()
