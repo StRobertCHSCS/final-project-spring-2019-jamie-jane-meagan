@@ -166,7 +166,7 @@ class MyGame(arcade.Window):
 
         self.background = arcade.load_texture("images/background.jpg")
 
-        texture = arcade.load_texture("images/introscreen.png")
+        texture = arcade.load_texture("images/introscreen1.png")
         self.instructions = texture
 
     def setup(self):
