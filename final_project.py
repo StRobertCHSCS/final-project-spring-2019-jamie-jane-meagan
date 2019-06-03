@@ -19,6 +19,10 @@ SCREEN_HEIGHT = 800
 
 SHOOT_SPEED = 5
 
+INSTRUCTION_PAGE = 0
+GAMEPLAY = 1
+GAMEOVER = 2
+
 
 class Seal(arcade.Sprite):
     def __init__(self, filename, sprite_scaling):
@@ -138,6 +142,9 @@ class MyGame(arcade.Window):
         # background
         self.background = None
 
+        # Open game with introduction page
+        self.current_state = INSTRUCTION_PAGE
+
         # Timer
         self.total_time = 30.0
 
@@ -159,6 +166,12 @@ class MyGame(arcade.Window):
 
         self.background = arcade.load_texture("images/background.jpg")
 
+        texture = arcade.load_texture("images/introscreen1.png")
+        self.instructions = texture
+
+        texture = arcade.load_texture("images/gameover.png")
+        self.gameover = texture
+
     def setup(self):
         """ Set up the game and initialize the variables. """
 
@@ -174,7 +187,7 @@ class MyGame(arcade.Window):
         self.score = 0
 
         # Timer
-        self.total_time = 45.0
+        self.total_time = 30.0
 
         # Set up the player
         # Character images
@@ -256,7 +269,29 @@ class MyGame(arcade.Window):
             # add the fish to the lists
             self.fish_list.append(fish)
 
-    def on_draw(self):
+    def draw_instructions_page(self):
+        """
+        Load image of instruction page
+        """
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                      SCREEN_WIDTH,
+                                      SCREEN_HEIGHT, self.instructions, 0)
+
+    def draw_gameover_page(self):
+        """
+        Load image of game over page
+        """
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                      SCREEN_WIDTH,
+                                      SCREEN_HEIGHT, self.gameover, 0)
+        if len(self.shrimps_list) == 0 or self.score >= 50:
+            arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.BLUE, 30)
+
+        if self.lives == 0 or self.total_time < 0.1 or len(self.trash_list) == 0:
+            arcade.draw_text("Sorry you lost:(", 300, 400, arcade.color.RED, 75)
+            # print score
+
+    def draw(self):
         """ Draw everything """
         arcade.start_render()
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
@@ -278,11 +313,9 @@ class MyGame(arcade.Window):
         output = f"Score: {self.score}"
         arcade.draw_text(output, 10, 20, arcade.color.WHITE, 17)
 
-        if len(self.shrimps_list) == 0 or self.score >= 50:
-            arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.BLUE, 30)
-
-        if len(self.trash_list) == 0 or self.score <= -3 or self.lives == 0 or self.total_time == 0:
-            arcade.draw_text("GAME OVER!", 300, 400, arcade.color.RED, 75)
+        if len(self.shrimps_list) == 0 or self.score >= 50 or self.lives == 0 or self.total_time < 0.1 \
+                or len(self.trash_list) == 0:
+            self.current_state = GAMEOVER
 
     def on_key_press(self, key, modifiers):
         # Pull down the apple to the ground
@@ -298,8 +331,18 @@ class MyGame(arcade.Window):
         if key == arcade.key.DOWN:
             self.player_sprite.center_y -= 45
 
+        # Use space key to move to the following state
+        if key == arcade.key.SPACE:
+            if self.current_state == INSTRUCTION_PAGE:
+                self.current_state = GAMEPLAY
+
+            elif self.current_state == GAMEOVER:
+                self.current_state = INSTRUCTION_PAGE
+                # Reset all initial game settings
+                self.setup()
+
     def update(self, delta_time):
-        if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and self.score > -3 and self.score < 50 and self.total_time > 0.0:
+        if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and self.score < 50 and self.total_time > 0.0:
             self.shrimps_list.update()
             self.trash_list.update()
             self.fish_list.update()
@@ -360,6 +403,26 @@ class MyGame(arcade.Window):
         shooter.angle = 90
 
         self.shooting_list.append(shooter)
+
+    def on_draw(self):
+        """
+        Render the screen.
+        """
+
+        # Draw pages based on the current state
+        arcade.start_render()
+
+        if self.current_state == INSTRUCTION_PAGE:
+            self.draw_instructions_page()
+
+        elif self.current_state == GAMEPLAY:
+            self.draw()
+
+        elif self.current_state == GAMEOVER:
+            self.draw_gameover_page()
+
+        else:
+            self.draw()
 
 
 def main():
