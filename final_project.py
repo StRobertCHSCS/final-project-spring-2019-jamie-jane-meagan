@@ -272,7 +272,7 @@ class MyGame(arcade.Window):
         minutes = int(self.total_time) // 60
         seconds = int(self.total_time) % 60
         output = f"Time: {minutes:02d}:{seconds:02d}"
-        arcade.draw_text(output, 10, 70, arcade.color.BLACK, 17)
+        arcade.draw_text(output, 10, 50, arcade.color.BLACK, 17)
 
         # put the text on the screen
         output = f"Score: {self.score}"
@@ -281,10 +281,7 @@ class MyGame(arcade.Window):
         if len(self.shrimps_list) == 0 or self.score >= 50:
             arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.BLUE, 30)
 
-        if len(self.trash_list) == 0 or self.score <= -3 or self.lives == 0:
-            arcade.draw_text("GAME OVER!", 300, 400, arcade.color.RED, 75)
-
-        if self.total_time == 0:
+        if len(self.trash_list) == 0 or self.score <= -3 or self.lives == 0 or self.total_time == 0:
             arcade.draw_text("GAME OVER!", 300, 400, arcade.color.RED, 75)
 
     def on_key_press(self, key, modifiers):
