@@ -8,6 +8,7 @@ SPRITE_SCALING_SEAL = 0.3
 SPRITE_SCALING_SHRIMPS = 0.2
 SPRITE_SCALING_TRASH = 0.08
 SPRITE_SCALING_FISH = 0.1
+SPRITE_SCALING_SHOOTER = 0.01
 
 
 SHRIMPS_COUNT = 30
@@ -16,6 +17,8 @@ FISH_COUNT = 2
 
 SCREEN_WIDTH = 1250
 SCREEN_HEIGHT = 800
+
+SHOOT_SPEED = 5
 
 class Seal(arcade.Sprite):
     def __init__(self, filename, sprite_scaling):
@@ -137,6 +140,7 @@ class MyGame(arcade.Window):
         self.seal_list = None
         self.trash_list = None
         self.fish_list = None
+        self.shooting_list = None
 
         # Set up the player info
         self.player_sprite = None
@@ -146,7 +150,7 @@ class MyGame(arcade.Window):
         self.lives = 3
 
         # Don't show the mouse cursor
-        self.set_mouse_visible(False)
+        self.set_mouse_visible(True)
 
         self.background = arcade.load_texture("images/background.jpg")
 
@@ -159,6 +163,7 @@ class MyGame(arcade.Window):
         self.seal_list = arcade.SpriteList()
         self.trash_list = arcade.SpriteList()
         self.fish_list = arcade.SpriteList()
+        self.shooting_list = arcade.SpriteList()
 
         # Score
         self.score = 0
@@ -244,6 +249,7 @@ class MyGame(arcade.Window):
         self.shrimps_list.draw()
         self.trash_list.draw()
         self.fish_list.draw()
+        self.shooting_list.draw()
 
         # put the text on the screen
         output_2 = f"Lives: {self.lives}"
@@ -253,7 +259,7 @@ class MyGame(arcade.Window):
         output = f"Score: {self.score}"
         arcade.draw_text(output, 10, 20, arcade.color.WHITE, 17)
 
-        if len(self.shrimps_list) == 0 or self.score >= 30:
+        if len(self.shrimps_list) == 0 or self.score >= 50:
             arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.BLUE, 30)
 
         if len(self.trash_list) == 0 or self.score <= -3 or self.lives == 0:
@@ -300,7 +306,40 @@ class MyGame(arcade.Window):
                 self.score += 10
                 os.system("afplay fish.mp3&")
 
+        self.shooting_list.update()
 
+        # Loop through each shot
+        for shoot in self.shooting_list:
+
+            # Check if trash is hit
+            hit_list = arcade.check_for_collision_with_list(shoot, self.trash_list)
+
+            # Remove pieces of trash that are hit
+            if len(hit_list) > 0:
+                shoot.kill()
+
+            # Adjust short
+            for trash in hit_list:
+                trash.kill()
+                self.score += 5
+                os.system("afplay shoot.mp3&")
+
+            # If the bullet flies off-screen, remove it.
+            if shoot.bottom > SCREEN_HEIGHT:
+                shoot.kill()
+
+    def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
+
+        # Create shooter
+        shooter = arcade.Sprite("images/shooter.png", SPRITE_SCALING_SHOOTER)
+
+        # Adjust position to match seal
+        shooter.center_x = self.player_sprite.center_x
+        shooter.center_y = self.player_sprite.center_y
+        shooter.change_y = SHOOT_SPEED
+        shooter.angle = 90
+
+        self.shooting_list.append(shooter)
 
 def main():
     """ Main method """
