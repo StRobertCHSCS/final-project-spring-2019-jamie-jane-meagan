@@ -130,6 +130,9 @@ class MyGame(arcade.Window):
         # background
         self.background = None
 
+        # Timer
+        self.total_time = 60.0
+
         # Variables that will hold sprite lists
         self.wall_list = None
         self.shrimps_list = None
@@ -159,6 +162,9 @@ class MyGame(arcade.Window):
 
         # Score
         self.score = 0
+
+        # Timer
+        self.total_time = 60.0
 
         # Set up the player
         # Character images
@@ -252,6 +258,20 @@ class MyGame(arcade.Window):
         self.trash_list.draw()
         self.fish_list.draw()
 
+        # Timer
+        minutes = int(self.total_time) // 60
+        seconds = int(self.total_time) % 60
+        output = f"Time: {minutes:02d}:{seconds:02d}"
+        arcade.draw_text(output, 10, 70, arcade.color.BLACK, 17)
+
+        # put the text on the screen
+        output_2 = f"Lives: {self.lives}"
+        arcade.draw_text(output_2, 10, 45, arcade.color.RED, 17)
+
+        # put the text on the screen
+        output = f"Score: {self.score}"
+        arcade.draw_text(output, 10, 20, arcade.color.WHITE, 17)
+
         # put the text on the screen
         output = f"Score: {self.score}"
         arcade.draw_text(output, 10, 20, arcade.color.WHITE, 17)
@@ -277,10 +297,11 @@ class MyGame(arcade.Window):
             self.player_sprite.center_y -= 45
 
     def update(self, delta_time):
-        if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and self.score > -3 and self.score < 30:
+        if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and self.score > -3 and self.score < 30 and self.total_time > 0.0:
             self.shrimps_list.update()
             self.trash_list.update()
             self.fish_list.update()
+            self.total_time -= delta_time
 
             # generate a list of all sprites that collided with the player
             shrimps_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.shrimps_list)
