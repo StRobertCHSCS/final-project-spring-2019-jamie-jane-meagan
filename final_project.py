@@ -10,7 +10,6 @@ SPRITE_SCALING_TRASH = 0.08
 SPRITE_SCALING_FISH = 0.1
 SPRITE_SCALING_SHOOTER = 0.01
 
-
 SHRIMPS_COUNT = 30
 TRASH_COUNT = 15
 FISH_COUNT = 2
@@ -139,6 +138,9 @@ class MyGame(arcade.Window):
         # background
         self.background = None
 
+        # Timer
+        self.total_time = 30.0
+
         # Variables that will hold sprite lists
         self.wall_list = None
         self.shrimps_list = None
@@ -150,8 +152,6 @@ class MyGame(arcade.Window):
         # Set up the player info
         self.player_sprite = None
         self.score = 0
-
-        # set up the lives that the player is given
         self.lives = 3
 
         # Don't show the mouse cursor
@@ -172,6 +172,9 @@ class MyGame(arcade.Window):
 
         # Score
         self.score = 0
+
+        # Timer
+        self.total_time = 45.0
 
         # Set up the player
         # Character images
@@ -197,6 +200,16 @@ class MyGame(arcade.Window):
         wall.center_x = 243
         wall.center_y = 38
         self.wall_list.append(wall)
+
+        # lives
+        self.lives = 3
+        cur_pos = 10
+        for i in range(self.lives):
+            life = arcade.Sprite("images/lives.png", 0.5)
+            life.center_x = cur_pos + life.width
+            life.center_y = 765
+            cur_pos += life.width
+            self.wall_list.append(life)
 
         # Create the shrimps
         for i in range(SHRIMPS_COUNT):
@@ -255,9 +268,11 @@ class MyGame(arcade.Window):
         self.fish_list.draw()
         self.shooting_list.draw()
 
-        # put the text on the screen
-        output_2 = f"Lives: {self.lives}"
-        arcade.draw_text(output_2, 10, 45, arcade.color.RED, 17)
+        # Timer
+        minutes = int(self.total_time) // 60
+        seconds = int(self.total_time) % 60
+        output = f"Time: {minutes:02d}:{seconds:02d}"
+        arcade.draw_text(output, 10, 70, arcade.color.BLACK, 17)
 
         # put the text on the screen
         output = f"Score: {self.score}"
@@ -267,6 +282,9 @@ class MyGame(arcade.Window):
             arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.BLUE, 30)
 
         if len(self.trash_list) == 0 or self.score <= -3 or self.lives == 0:
+            arcade.draw_text("GAME OVER!", 300, 400, arcade.color.RED, 75)
+
+        if self.total_time == 0:
             arcade.draw_text("GAME OVER!", 300, 400, arcade.color.RED, 75)
 
     def on_key_press(self, key, modifiers):
@@ -284,10 +302,11 @@ class MyGame(arcade.Window):
             self.player_sprite.center_y -= 45
 
     def update(self, delta_time):
-        if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and self.score > -3 and self.score < 30:
+        if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and self.score > -3 and self.score < 50 and self.total_time > 0.0:
             self.shrimps_list.update()
             self.trash_list.update()
             self.fish_list.update()
+            self.total_time -= delta_time
 
             # generate a list of all sprites that collided with the player
             shrimps_hit_list = arcade.check_for_collision_with_list(self.player_sprite, self.shrimps_list)
