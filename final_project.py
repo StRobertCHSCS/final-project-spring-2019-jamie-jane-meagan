@@ -207,16 +207,6 @@ class MyGame(arcade.Window):
         self.player_sprite.center_y = 100
         self.seal_list.append(self.player_sprite)
 
-        # lives
-        self.lives = 3
-        cur_pos = 10
-        for i in range(self.lives):
-            life = arcade.Sprite("images/lives.png", 0.5)
-            life.center_x = cur_pos + life.width
-            life.center_y = 765
-            cur_pos += life.width
-            self.wall_list.append(life)
-
         # Create the shrimps
         for i in range(SHRIMPS_COUNT):
             # Create the shrimps instance
