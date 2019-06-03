@@ -314,7 +314,10 @@ class MyGame(arcade.Window):
 
         # put the text on the screen
         output = f"Score: {self.score}"
-        arcade.draw_text(output, 10, 20, arcade.color.WHITE, 17)
+        arcade.draw_text(output, 10, 50, arcade.color.WHITE, 17)
+
+        output = f"Lives: {self.lives}"
+        arcade.draw_text(output, 10, 700, arcade.color.WHITE, 17)
 
         if len(self.shrimps_list) == 0 or self.score >= 50 or self.lives == 0 or self.total_time < 0.1 \
                 or len(self.trash_list) == 0:
@@ -399,8 +402,10 @@ class MyGame(arcade.Window):
             hit_list = arcade.check_for_collision(rock, self.player_sprite)
 
             if hit_list == True:
-                rock.kill()
                 self.lives -= 1
+                rock.kill()
+                os.system("afplay rock.mp3&")
+                # add x over heart
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
 
