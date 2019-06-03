@@ -200,6 +200,9 @@ class MyGame(arcade.Window):
         # Timer
         self.total_time = 30.0
 
+        # Lives
+        self.lives = 3
+
         # Set up the player
         # Character images
         self.player_sprite = arcade.Sprite("images/seal.png", SPRITE_SCALING_SEAL)
@@ -293,7 +296,7 @@ class MyGame(arcade.Window):
             output = f"Score: {self.score}"
             arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
 
-        if self.lives == 0:
+        if self.lives < 1:
             arcade.draw_text("You lost all your lives", 200, 400, arcade.color.RED, 75)
             output = f"Score: {self.score}"
             arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
@@ -327,6 +330,7 @@ class MyGame(arcade.Window):
         if len(self.shrimps_list) == 0 or self.score >= 50 or self.lives == 0 or self.total_time < 0.1 \
                 or len(self.trash_list) == 0:
             self.current_state = GAMEOVER
+            self.setup()
 
     def on_key_press(self, key, modifiers):
         # Pull down the apple to the ground
