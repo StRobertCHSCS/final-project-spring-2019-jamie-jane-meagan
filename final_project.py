@@ -286,6 +286,8 @@ class MyGame(arcade.Window):
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
                                       SCREEN_WIDTH,
                                       SCREEN_HEIGHT, self.gameover, 0)
+
+        # Add messages depending on game outcome
         if len(self.shrimps_list) == 0 or self.score >= 50:
             arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.BLUE, 30)
 
@@ -399,8 +401,10 @@ class MyGame(arcade.Window):
 
         for rock in self.rock_list:
 
+            # Find when rock is hit
             hit_list = arcade.check_for_collision(rock, self.player_sprite)
 
+            # Adjust lives and play sound
             if hit_list == True:
                 self.lives -= 1
                 rock.kill()
