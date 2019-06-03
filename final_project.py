@@ -13,6 +13,7 @@ SPRITE_SCALING_SHOOTER = 0.01
 SHRIMPS_COUNT = 30
 TRASH_COUNT = 15
 FISH_COUNT = 2
+ROCK_COUNT = 3
 
 SCREEN_WIDTH = 1250
 SCREEN_HEIGHT = 800
@@ -131,6 +132,14 @@ class Fish(arcade.Sprite):
         self.center_x = random.randrange(SCREEN_WIDTH)
 
 
+class Rock(arcade.Sprite):
+
+    def __init__(self, filename, sprite_scaling):
+        super().__init__(filename, sprite_scaling)
+        self.pos_x = [180, 1100, 243]
+        self.pos_y = [85, 220, 38]
+
+
 class MyGame(arcade.Window):
     """ Our custom Window Class"""
 
@@ -155,6 +164,7 @@ class MyGame(arcade.Window):
         self.trash_list = None
         self.fish_list = None
         self.shooting_list = None
+        self.rock_list = None
 
         # Set up the player info
         self.player_sprite = None
@@ -182,6 +192,7 @@ class MyGame(arcade.Window):
         self.trash_list = arcade.SpriteList()
         self.fish_list = arcade.SpriteList()
         self.shooting_list = arcade.SpriteList()
+        self.rock_list = arcade.SpriteList()
 
         # Score
         self.score = 0
@@ -195,24 +206,6 @@ class MyGame(arcade.Window):
         self.player_sprite.center_x = 1150
         self.player_sprite.center_y = 100
         self.seal_list.append(self.player_sprite)
-
-        # Manually create and position a rock at 180, 85
-        wall = arcade.Sprite("images/rock.png", SPRITE_SCALING_ROCK)
-        wall.center_x = 180
-        wall.center_y = 85
-        self.wall_list.append(wall)
-
-        # Manually creat and position a box at 1100, 240
-        wall = arcade.Sprite("images/rock.png", SPRITE_SCALING_ROCK)
-        wall.center_x = 1100
-        wall.center_y = 220
-        self.wall_list.append(wall)
-
-        # Manually create and position a rock at
-        wall = arcade.Sprite("images/rock.png", SPRITE_SCALING_ROCK)
-        wall.center_x = 243
-        wall.center_y = 38
-        self.wall_list.append(wall)
 
         # lives
         self.lives = 3
@@ -269,6 +262,15 @@ class MyGame(arcade.Window):
             # add the fish to the lists
             self.fish_list.append(fish)
 
+        for i in range(ROCK_COUNT):
+            # Create 3 rocks barriers
+            rock = Rock("images/rock.png", SPRITE_SCALING_ROCK)
+
+            rock.center_x = rock.pos_x[i]
+            rock.center_y = rock.pos_y[i]
+
+            self.rock_list.append(rock)
+
     def draw_instructions_page(self):
         """
         Load image of instruction page
@@ -302,6 +304,7 @@ class MyGame(arcade.Window):
         self.trash_list.draw()
         self.fish_list.draw()
         self.shooting_list.draw()
+        self.rock_list.draw()
 
         # Timer
         minutes = int(self.total_time) // 60
@@ -390,6 +393,14 @@ class MyGame(arcade.Window):
             # If the shot flies off-screen, remove it.
             if shoot.bottom > SCREEN_HEIGHT:
                 shoot.kill()
+
+        for rock in self.rock_list:
+
+            hit_list = arcade.check_for_collision(rock, self.player_sprite)
+
+            if hit_list == True:
+                rock.kill()
+                self.lives -= 1
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
 
