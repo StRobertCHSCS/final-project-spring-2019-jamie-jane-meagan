@@ -293,7 +293,8 @@ class MyGame(arcade.Window):
 
         if self.lives == 0 or self.total_time < 0.1 or len(self.trash_list) == 0:
             arcade.draw_text("Sorry you lost:(", 300, 400, arcade.color.RED, 75)
-            # print score
+            output = f"Score: {self.score}"
+            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
 
     def draw(self):
         """ Draw everything """
