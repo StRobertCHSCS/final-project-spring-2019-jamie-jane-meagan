@@ -422,7 +422,6 @@ class MyGame(arcade.Window):
                 self.lives -= 1
                 rock.kill()
                 os.system("afplay rock.mp3&")
-                # add x over heart
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
 
