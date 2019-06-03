@@ -322,10 +322,10 @@ class MyGame(arcade.Window):
 
         # put the text on the screen
         output = f"Score: {self.score}"
-        arcade.draw_text(output, 10, 50, arcade.color.WHITE, 17)
+        arcade.draw_text(output, 10, 25, arcade.color.WHITE, 17)
 
         output = f"Lives: {self.lives}"
-        arcade.draw_text(output, 10, 700, arcade.color.WHITE, 17)
+        arcade.draw_text(output, 10, 760, arcade.color.WHITE, 17)
 
         if len(self.shrimps_list) == 0 or self.score >= 50 or self.lives == 0 or self.total_time < 0.1 \
                 or len(self.trash_list) == 0:
