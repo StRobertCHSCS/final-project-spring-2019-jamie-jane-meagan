@@ -20,6 +20,7 @@ SCREEN_HEIGHT = 800
 
 SHOOT_SPEED = 5
 
+
 class Seal(arcade.Sprite):
     def __init__(self, filename, sprite_scaling):
         super().__init__(filename, sprite_scaling)
@@ -44,6 +45,7 @@ class Seal(arcade.Sprite):
 
         if self.top > SCREEN_HEIGHT:
             self.change_y *= -1
+
 
 class Shrimps(arcade.Sprite):
 
@@ -76,6 +78,7 @@ class Shrimps(arcade.Sprite):
         # Increase the angle in prep for the next round.
         self.circle_angle += self.circle_speed
 
+
 class Trash(arcade.Sprite):
 
     def __init__(self, filename, sprite_scaling):
@@ -104,6 +107,7 @@ class Trash(arcade.Sprite):
         if self.top > SCREEN_HEIGHT:
             self.change_y *= -1
 
+
 class Fish(arcade.Sprite):
 
     def __init__(self, filename, sprite_scaling):
@@ -122,6 +126,7 @@ class Fish(arcade.Sprite):
         # reset the fish to a random spot above the screen
         self.center_y = random.randrange(SCREEN_HEIGHT + 20, SCREEN_HEIGHT + 100)
         self.center_x = random.randrange(SCREEN_WIDTH)
+
 
 class MyGame(arcade.Window):
     """ Our custom Window Class"""
@@ -238,7 +243,6 @@ class MyGame(arcade.Window):
             # add the fish to the lists
             self.fish_list.append(fish)
 
-
     def on_draw(self):
         """ Draw everything """
         arcade.start_render()
@@ -318,13 +322,13 @@ class MyGame(arcade.Window):
             if len(hit_list) > 0:
                 shoot.kill()
 
-            # Adjust short
+            # Adjust score
             for trash in hit_list:
                 trash.kill()
                 self.score += 5
                 os.system("afplay shoot.mp3&")
 
-            # If the bullet flies off-screen, remove it.
+            # If the shot flies off-screen, remove it.
             if shoot.bottom > SCREEN_HEIGHT:
                 shoot.kill()
 
@@ -341,11 +345,13 @@ class MyGame(arcade.Window):
 
         self.shooting_list.append(shooter)
 
+
 def main():
     """ Main method """
     window = MyGame()
     window.setup()
     arcade.run()
+
 
 if __name__ == "__main__":
     main()
