@@ -19,6 +19,10 @@ SCREEN_HEIGHT = 800
 
 SHOOT_SPEED = 5
 
+INSTRUCTION_PAGE = 0
+GAMEPLAY = 1
+GAMEOVER = 2
+
 
 class Seal(arcade.Sprite):
     def __init__(self, filename, sprite_scaling):
@@ -138,6 +142,9 @@ class MyGame(arcade.Window):
         # background
         self.background = None
 
+        # Open game with introduction page
+        self.current_state = INSTRUCTION_PAGE
+
         # Timer
         self.total_time = 30.0
 
@@ -158,6 +165,9 @@ class MyGame(arcade.Window):
         self.set_mouse_visible(True)
 
         self.background = arcade.load_texture("images/background.jpg")
+
+        texture = arcade.load_texture("images/introscreen.png")
+        self.instructions = texture
 
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -256,7 +266,16 @@ class MyGame(arcade.Window):
             # add the fish to the lists
             self.fish_list.append(fish)
 
-    def on_draw(self):
+    def draw_instructions_page(self):
+        """
+        Draw an instruction page. Load the page as an image.
+        """
+        # page_texture = self.instructions()
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                      SCREEN_WIDTH,
+                                      SCREEN_HEIGHT, self.instructions, 0)
+
+    def draw(self):
         """ Draw everything """
         arcade.start_render()
         arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
@@ -300,6 +319,12 @@ class MyGame(arcade.Window):
 
         if key == arcade.key.DOWN:
             self.player_sprite.center_y -= 45
+
+        if key == arcade.key.SPACE:
+            if self.current_state == INSTRUCTION_PAGE:
+                # Next page of instructions.
+                self.current_state = GAMEPLAY
+
 
     def update(self, delta_time):
         if len(self.shrimps_list) > 0 and len(self.trash_list) > 0 and self.score > -3 and self.score < 50 and self.total_time > 0.0:
@@ -363,6 +388,23 @@ class MyGame(arcade.Window):
         shooter.angle = 90
 
         self.shooting_list.append(shooter)
+
+    def on_draw(self):
+        """
+        Render the screen.
+        """
+
+        # This command has to happen before we start drawing
+        arcade.start_render()
+
+        if self.current_state == INSTRUCTION_PAGE:
+            self.draw_instructions_page()
+
+        elif self.current_state == GAMEPLAY:
+            self.draw()
+
+        else:
+            self.draw()
 
 
 def main():
