@@ -290,9 +290,21 @@ class MyGame(arcade.Window):
         # Add messages depending on game outcome
         if len(self.shrimps_list) == 0 or self.score >= 50:
             arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.BLUE, 30)
+            output = f"Score: {self.score}"
+            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
 
-        if self.lives == 0 or self.total_time < 0.1 or len(self.trash_list) == 0:
+        if len(self.trash_list) == 0:
             arcade.draw_text("Sorry you lost:(", 300, 400, arcade.color.RED, 75)
+            output = f"Score: {self.score}"
+            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
+
+        if self.total_time < 0.1:
+            arcade.draw_text("Times Up!!!", 375, 400, arcade.color.RED, 75)
+            output = f"Score: {self.score}"
+            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
+
+        if self.lives == 0:
+            arcade.draw_text("You lost all your lives", 200, 400, arcade.color.RED, 75)
             output = f"Score: {self.score}"
             arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
 
