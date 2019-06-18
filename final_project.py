@@ -21,8 +21,10 @@ SCREEN_HEIGHT = 800
 SHOOT_SPEED = 5
 
 INSTRUCTION_PAGE = 0
-GAMEPLAY = 1
+GAMEPLAY_1 = 1
 GAMEOVER = 2
+TRANSITION_LEV = 3
+GAMEPLAY_2 = 4
 
 
 class Seal(arcade.Sprite):
@@ -150,6 +152,7 @@ class MyGame(arcade.Window):
 
         # background
         self.background = None
+        self.background2 = None
 
         # Open game with introduction page
         self.current_state = INSTRUCTION_PAGE
@@ -175,12 +178,17 @@ class MyGame(arcade.Window):
         self.set_mouse_visible(True)
 
         self.background = arcade.load_texture("images/background.jpg")
+        self.background2 = arcade.load_texture("images/background2.png")
 
         texture = arcade.load_texture("images/introscreen1.png")
         self.instructions = texture
 
         texture = arcade.load_texture("images/gameover.png")
         self.gameover = texture
+
+        texture = arcade.load_texture("images/transition.png")
+        self.transition = texture
+
 
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -272,6 +280,20 @@ class MyGame(arcade.Window):
                                       SCREEN_WIDTH,
                                       SCREEN_HEIGHT, self.instructions, 0)
 
+    def draw_transition_lev_page(self):
+        """
+        Load image of transition page
+        """
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                      SCREEN_WIDTH,
+                                      SCREEN_HEIGHT, self.transition, 0)
+
+        if len(self.shrimps_list) == 0 or self.score >= 5:
+            arcade.draw_text("CONGRATULATIONS, YOU WON LEVEL 1!", 320, 400, arcade.color.BLUE, 30)
+            output = f"Score: {self.score}"
+            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
+            self.current_state = TRANSITION_LEV
+
     def draw_gameover_page(self):
         """
         Load image of game over page
@@ -281,11 +303,6 @@ class MyGame(arcade.Window):
                                       SCREEN_HEIGHT, self.gameover, 0)
 
         # Add messages depending on game outcome
-        if len(self.shrimps_list) == 0 or self.score >= 50:
-            arcade.draw_text("CONGRATULATIONS, YOU WON!", 340, 400, arcade.color.BLUE, 30)
-            output = f"Score: {self.score}"
-            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
-
         if len(self.trash_list) == 0:
             arcade.draw_text("Sorry you lost:(", 300, 400, arcade.color.RED, 75)
             output = f"Score: {self.score}"
@@ -304,60 +321,84 @@ class MyGame(arcade.Window):
     def draw(self):
         """ Draw everything """
         arcade.start_render()
-        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+
+        if self.current_state == GAMEPLAY_1:
+
+            arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
                                       SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
-        self.wall_list.draw()
-        self.seal_list.draw()
-        self.shrimps_list.draw()
-        self.trash_list.draw()
-        self.fish_list.draw()
-        self.shooting_list.draw()
-        self.rock_list.draw()
 
-        # Timer
-        minutes = int(self.total_time) // 60
-        seconds = int(self.total_time) % 60
-        output = f"Time: {minutes:02d}:{seconds:02d}"
-        arcade.draw_text(output, 10, 50, arcade.color.BLACK, 17)
+            # Timer
+            minutes = int(self.total_time) // 60
+            seconds = int(self.total_time) % 60
+            output = f"Time: {minutes:02d}:{seconds:02d}"
+            arcade.draw_text(output, 10, 50, arcade.color.BLACK, 17)
 
-        # put the text on the screen
-        output = f"Score: {self.score}"
-        arcade.draw_text(output, 10, 25, arcade.color.WHITE, 17)
+            self.wall_list.draw()
+            self.seal_list.draw()
+            self.shrimps_list.draw()
+            self.trash_list.draw()
+            self.fish_list.draw()
+            self.shooting_list.draw()
+            self.rock_list.draw()
 
-        output = f"Lives: {self.lives}"
-        arcade.draw_text(output, 10, 760, arcade.color.WHITE, 17)
+            # put the text on the screen
+            output = f"Score: {self.score}"
+            arcade.draw_text(output, 10, 25, arcade.color.WHITE, 17)
 
-        if len(self.shrimps_list) == 0 or self.score >= 50 or self.lives == 0 or self.total_time < 0.1 \
-                or len(self.trash_list) == 0:
-            self.current_state = GAMEOVER
-            self.setup()
+            output = f"Lives: {self.lives}"
+            arcade.draw_text(output, 10, 760, arcade.color.WHITE, 17)
+
+            if self.lives == 0 or self.total_time < 0.1 and len(self.trash_list) == 0:
+                self.current_state = GAMEOVER
+
+            elif self.total_time < 0.1 and len(self.shrimps_list) == 0 or \
+                    self.total_time < 0.1 and self.score >= 25:
+                self.current_state = TRANSITION_LEV
+
+        elif self.current_state == GAMEPLAY_2:
+            arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                          SCREEN_WIDTH, SCREEN_HEIGHT, self.background2)
+
+            # Timer
+            minutes = int(self.total_time) // 60
+            seconds = int(self.total_time) % 60
+            output = f"Time: {minutes:02d}:{seconds:02d}"
+            arcade.draw_text(output, 10, 50, arcade.color.BLACK, 17)
 
     def on_key_press(self, key, modifiers):
-        # Pull down the apple to the ground
-        if key == arcade.key.UP:
-            self.player_sprite.center_y += 45
+        if self.current_state == GAMEPLAY_1:
+            # Pull down the apple to the ground
+            if key == arcade.key.UP:
+                self.player_sprite.center_y += 45
 
-        if key == arcade.key.LEFT:
-            self.player_sprite.center_x -= 45
+            if key == arcade.key.LEFT:
+                self.player_sprite.center_x -= 45
 
-        if key == arcade.key.RIGHT:
-            self.player_sprite.center_x += 45
+            if key == arcade.key.RIGHT:
+                self.player_sprite.center_x += 45
 
-        if key == arcade.key.DOWN:
-            self.player_sprite.center_y -= 45
+            if key == arcade.key.DOWN:
+                self.player_sprite.center_y -= 45
+
+        elif self.current_state == GAMEPLAY_2:
+            pass
 
         # Use space key to move to the following state
         if key == arcade.key.SPACE:
             if self.current_state == INSTRUCTION_PAGE:
-                self.current_state = GAMEPLAY
+                self.current_state = GAMEPLAY_1
 
             elif self.current_state == GAMEOVER:
                 self.current_state = INSTRUCTION_PAGE
                 # Reset all initial game settings
                 self.setup()
 
+            elif self.current_state == TRANSITION_LEV:
+                self.current_state = GAMEPLAY_2
+                self.setup()
+
     def update(self, delta_time):
-        if self.current_state == GAMEPLAY:
+        if self.current_state == GAMEPLAY_1:
             self.shrimps_list.update()
             self.trash_list.update()
             self.fish_list.update()
@@ -384,51 +425,59 @@ class MyGame(arcade.Window):
                 self.score += 10
                 os.system("afplay fish.mp3&")
 
-        self.shooting_list.update()
+            self.shooting_list.update()
 
-        # Loop through each shot
-        for shoot in self.shooting_list:
+            # Loop through each shot
+            for shoot in self.shooting_list:
 
-            # Check if trash is hit
-            hit_list = arcade.check_for_collision_with_list(shoot, self.trash_list)
+                # Check if trash is hit
+                hit_list = arcade.check_for_collision_with_list(shoot, self.trash_list)
 
-            # Remove pieces of trash that are hit
-            if len(hit_list) > 0:
-                shoot.kill()
+                # Remove pieces of trash that are hit
+                if len(hit_list) > 0:
+                    shoot.kill()
 
-            # Adjust score
-            for trash in hit_list:
-                trash.kill()
-                self.score += 5
-                os.system("afplay shoot.mp3&")
+                # Adjust score
+                for trash in hit_list:
+                    trash.kill()
+                    self.score += 5
+                    os.system("afplay shoot.mp3&")
 
-            # If the shot flies off-screen, remove it.
-            if shoot.bottom > SCREEN_HEIGHT:
-                shoot.kill()
+                # If the shot flies off-screen, remove it.
+                if shoot.bottom > SCREEN_HEIGHT:
+                    shoot.kill()
 
-        for rock in self.rock_list:
+            for rock in self.rock_list:
 
-            # Find when rock is hit
-            hit_list = arcade.check_for_collision(rock, self.player_sprite)
+                # Find when rock is hit
+                hit_list = arcade.check_for_collision(rock, self.player_sprite)
 
-            # Adjust lives and play sound
-            if hit_list == True:
-                self.lives -= 1
-                rock.kill()
-                os.system("afplay rock.mp3&")
+                # Adjust lives and play sound
+                if hit_list == True:
+                    self.lives -= 1
+                    rock.kill()
+                    os.system("afplay rock.mp3&")
+
+        elif self.current_state == GAMEPLAY_2:
+            pass
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
 
-        # Create shooter
-        shooter = arcade.Sprite("images/shooter.png", SPRITE_SCALING_SHOOTER)
+        if self.current_state == GAMEPLAY_1:
 
-        # Adjust position to match seal
-        shooter.center_x = self.player_sprite.center_x
-        shooter.center_y = self.player_sprite.center_y
-        shooter.change_y = SHOOT_SPEED
-        shooter.angle = 90
+            # Create shooter
+            shooter = arcade.Sprite("images/shooter.png", SPRITE_SCALING_SHOOTER)
 
-        self.shooting_list.append(shooter)
+            # Adjust position to match seal
+            shooter.center_x = self.player_sprite.center_x
+            shooter.center_y = self.player_sprite.center_y
+            shooter.change_y = SHOOT_SPEED
+            shooter.angle = 90
+
+            self.shooting_list.append(shooter)
+
+        if self.current_state == GAMEPLAY_2:
+            pass
 
     def on_draw(self):
         """
@@ -440,12 +489,16 @@ class MyGame(arcade.Window):
 
         if self.current_state == INSTRUCTION_PAGE:
             self.draw_instructions_page()
+            self.setup
 
-        elif self.current_state == GAMEPLAY:
+        elif self.current_state == GAMEPLAY_1:
             self.draw()
 
         elif self.current_state == GAMEOVER:
             self.draw_gameover_page()
+
+        elif self.current_state == TRANSITION_LEV:
+            self.draw_transition_lev_page()
 
         else:
             self.draw()
