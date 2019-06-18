@@ -313,8 +313,13 @@ class MyGame(arcade.Window):
             output = f"Score: {self.score}"
             arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
 
-        if self.lives < 1:
+        elif self.lives < 1:
             arcade.draw_text("You lost all your lives", 200, 400, arcade.color.RED, 75)
+            output = f"Score: {self.score}"
+            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
+
+        elif self.lives < 1:
+            arcade.draw_text("Your score is too low", 200, 400, arcade.color.RED, 75)
             output = f"Score: {self.score}"
             arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
 
@@ -348,11 +353,11 @@ class MyGame(arcade.Window):
             output = f"Lives: {self.lives}"
             arcade.draw_text(output, 10, 760, arcade.color.WHITE, 17)
 
-            if self.lives == 0 or self.total_time < 0.1 and len(self.trash_list) == 0:
+            if self.lives == 0 or self.total_time < 0.1 and self.score < 50:
                 self.current_state = GAMEOVER
 
             elif self.total_time < 0.1 and len(self.shrimps_list) == 0 or \
-                    self.total_time < 0.1 and self.score >= 25:
+                    self.total_time < 0.1 and self.score >= 50:
                 self.current_state = TRANSITION_LEV
 
         elif self.current_state == GAMEPLAY_2:
