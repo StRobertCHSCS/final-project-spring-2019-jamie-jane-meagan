@@ -180,7 +180,7 @@ class MyGame(arcade.Window):
         self.background = arcade.load_texture("images/background.jpg")
         self.background2 = arcade.load_texture("images/background2.png")
 
-        texture = arcade.load_texture("images/introscreen1.png")
+        texture = arcade.load_texture("images/intropage1.png")
         self.instructions = texture
 
         texture = arcade.load_texture("images/gameover.png")
