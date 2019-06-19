@@ -416,9 +416,8 @@ class MyGame(arcade.Window):
                                       SCREEN_HEIGHT, self.transition, 0)
 
         if len(self.shrimps_list) == 0 or self.score >= 5:
-            arcade.draw_text("CONGRATULATIONS, YOU WON LEVEL 1!", 320, 400, arcade.color.BLUE, 30)
             output = f"Score: {self.score}"
-            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
+            arcade.draw_text(output, 570, 86, arcade.color.BLACK, 25)
             self.current_state = TRANSITION_LEV
 
     def draw_gameover_page(self):
@@ -512,16 +511,20 @@ class MyGame(arcade.Window):
         if self.current_state == GAMEPLAY_1:
             # Pull down the apple to the ground
             if key == arcade.key.UP:
-                self.player_sprite.center_y += 45
+                if self.player_sprite.center_y < 730:
+                    self.player_sprite.center_y += 45
 
             if key == arcade.key.LEFT:
-                self.player_sprite.center_x -= 45
+                if self.player_sprite.center_x > 70:
+                    self.player_sprite.center_x -= 45
 
             if key == arcade.key.RIGHT:
-                self.player_sprite.center_x += 45
+                if self.player_sprite.center_x < 1190:
+                    self.player_sprite.center_x += 45
 
             if key == arcade.key.DOWN:
-                self.player_sprite.center_y -= 45
+                if self.player_sprite.center_y > 60:
+                    self.player_sprite.center_y -= 45
 
         elif self.current_state == GAMEPLAY_2:
             if key == arcade.key.UP:
