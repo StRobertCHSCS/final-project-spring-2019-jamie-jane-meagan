@@ -273,8 +273,8 @@ class MyGame(arcade.Window):
         texture = arcade.load_texture("images/transition.png")
         self.transition = texture
 
-        texture = arcade.load_texture("")
-        self.winner = texture
+        #texture = arcade.load_texture("")
+        #self.winner = texture
 
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -515,6 +515,13 @@ class MyGame(arcade.Window):
             self.snowflake_list.draw()
             self.rain_list.draw()
 
+            if self.lives == 0 or self.total_time < 0.1 and self.score < 30:
+                self.current_state = GAMEOVER
+
+            elif self.total_time < 0.1 and len(self.snowflake_list_list) == 0 or \
+                    self.total_time < 0.1 and self.score >= 30:
+                self.current_state = WINNER
+
     def on_key_press(self, key, modifiers):
         if self.current_state == GAMEPLAY_1:
             # Move seal and keep from leaving border
@@ -694,7 +701,10 @@ class MyGame(arcade.Window):
         elif self.current_state == TRANSITION_LEV:
             self.draw_transition_lev_page()
 
-        else:
+        elif self.current_state == WINNER:
+            self.draw_winner_page()
+
+        elif self.current_state == GAMEPLAY_2:
             self.draw()
 
 def main():
