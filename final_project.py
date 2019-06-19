@@ -416,9 +416,8 @@ class MyGame(arcade.Window):
                                       SCREEN_HEIGHT, self.transition, 0)
 
         if len(self.shrimps_list) == 0 or self.score >= 5:
-            arcade.draw_text("CONGRATULATIONS, YOU WON LEVEL 1!", 320, 400, arcade.color.BLUE, 30)
             output = f"Score: {self.score}"
-            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
+            arcade.draw_text(output, 570, 86, arcade.color.BLACK, 25)
             self.current_state = TRANSITION_LEV
 
     def draw_gameover_page(self):
