@@ -32,6 +32,7 @@ GAMEPLAY_1 = 1
 GAMEOVER = 2
 TRANSITION_LEV = 3
 GAMEPLAY_2 = 4
+WINNER = 5
 
 class Seal(arcade.Sprite):
     def __init__(self, filename, sprite_scaling):
@@ -272,6 +273,9 @@ class MyGame(arcade.Window):
         texture = arcade.load_texture("images/transition.png")
         self.transition = texture
 
+        texture = arcade.load_texture("")
+        self.winner = texture
+
     def setup(self):
         """ Set up the game and initialize the variables. """
 
@@ -429,10 +433,6 @@ class MyGame(arcade.Window):
                                       SCREEN_HEIGHT, self.gameover, 0)
 
         # Add messages depending on game outcome
-        if len(self.trash_list) == 0:
-            arcade.draw_text("Sorry you lost:(", 400, 150, arcade.color.WHITE, 35)
-            output = f"Score: {self.score}"
-            arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
 
         if self.total_time < 0.1:
             arcade.draw_text("Times Up!!!", 375, 400, arcade.color.RED, 75)
@@ -444,10 +444,18 @@ class MyGame(arcade.Window):
             output = f"Score: {self.score}"
             arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
 
-        elif self.lives < 1:
-            arcade.draw_text("Your score is too low", 200, 400, arcade.color.RED, 75)
+        elif self.score < 25:
+            arcade.draw_text("Sorry you lost:(", 200, 400, arcade.color.RED, 75)
             output = f"Score: {self.score}"
             arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
+
+    def draw_winner_page(self):
+        """
+        Load image of winner page
+        """
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                      SCREEN_WIDTH,
+                                      SCREEN_HEIGHT, self.winner, 0)
 
     def draw(self):
         """ Draw everything """
@@ -535,6 +543,7 @@ class MyGame(arcade.Window):
                 os.system("afplay border.mp3&")
 
         elif self.current_state == GAMEPLAY_2:
+            # allow eskimo to move left and right
             if key == arcade.key.LEFT and self.player_sprite2.center_x >= 50:
                 self.player_sprite2.center_x -= 45
             elif key == arcade.key.LEFT and self.player_sprite2.center_x <= 50:
@@ -636,7 +645,7 @@ class MyGame(arcade.Window):
 
             for rain in rain_hit_list:
                 rain.kill()
-
+                self.lives -= 1
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
 
