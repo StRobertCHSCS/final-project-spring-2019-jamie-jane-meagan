@@ -629,6 +629,10 @@ class MyGame(arcade.Window):
             for rain in rain_hit_list:
                 rain.kill()
                 self.rain -= 1
+<<<<<<< HEAD
+=======
+
+>>>>>>> jamie-dev
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
 
