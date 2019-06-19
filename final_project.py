@@ -10,7 +10,7 @@ SPRITE_SCALING_TRASH = 0.08
 SPRITE_SCALING_FISH = 0.1
 SPRITE_SCALING_SHOOTER = 0.01
 SPRITE_SCALING_ESKIMO = 0.3
-SPRITE_SCALING_SNOWFLAKE = 0.2
+SPRITE_SCALING_SNOWFLAKE = 0.3
 SPRITE_SCALING_RAIN = 0.1
 SPRITE_SCALING_SHOOTER2 = 0.02
 
@@ -18,7 +18,7 @@ SHRIMPS_COUNT = 30
 TRASH_COUNT = 15
 FISH_COUNT = 2
 ROCK_COUNT = 3
-SNOWFLAKE_COUNT = 20
+SNOWFLAKE_COUNT = 30
 RAIN_COUNT = 10
 
 SCREEN_WIDTH = 1250
@@ -286,6 +286,7 @@ class MyGame(arcade.Window):
         self.eskimo_list = arcade.SpriteList()
         self.snowflake_list = arcade.SpriteList()
         self.rain_list = arcade.SpriteList()
+        self.shooting2_list = arcade.SpriteList()
 
         # Score
         self.score = 0
@@ -622,8 +623,37 @@ class MyGame(arcade.Window):
                 snowflake.kill()
                 self.score += 1
 
-            for rain in rain_hit_list:
-                rain.kill()
+
+            self.shooting2_list.update()
+
+            # Loop through each shot
+            for shoot2 in self.shooting_list:
+
+                # Check if rain is hit
+                hit_list = arcade.check_for_collision_with_list(shoot2, self.rain_list)
+
+                # Remove pieces of rain that are hit
+                if len(hit_list) > 0:
+                    shoot2.kill()
+
+                # Adjust score
+                for rain in hit_list:
+                    rain.kill()
+                    self.score += 1
+
+                # If the shot flies off-screen, remove it.
+                if shoot2.bottom > SCREEN_HEIGHT:
+                    shoot2.kill()
+
+            for rain in self.rain_list:
+
+                # Find when rain is hit
+                hit_list = arcade.check_for_collision(rain, self.player_sprite2)
+
+                # Adjust lives and play sound
+                if hit_list == True:
+                    self.lives2 -= 1
+                    rain.kill()
 
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
