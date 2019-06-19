@@ -32,8 +32,7 @@ GAMEPLAY_1 = 1
 GAMEOVER = 2
 TRANSITION_LEV = 3
 GAMEPLAY_2 = 4
-
-WINNER = 2
+WINNER = 5
 
 
 class Seal(arcade.Sprite):
@@ -436,11 +435,6 @@ class MyGame(arcade.Window):
                                       SCREEN_HEIGHT, self.gameover, 0)
 
         # Add messages depending on game outcome
-        if len(self.trash_list) == 0:
-            arcade.draw_text("Sorry you lost:(", 400, 150, arcade.color.WHITE, 35)
-            output = f"Score: {self.score}"
-            arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
-
         if self.total_time < 0.1:
             arcade.draw_text("Times Up!!!", 375, 400, arcade.color.RED, 75)
             output = f"Score: {self.score}"
@@ -451,10 +445,18 @@ class MyGame(arcade.Window):
             output = f"Score: {self.score}"
             arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
 
-        elif self.lives < 1:
-            arcade.draw_text("Your score is too low", 200, 400, arcade.color.RED, 75)
+        elif self.score < 25:
+            arcade.draw_text("Sorry you lost!", 200, 400, arcade.color.RED, 75)
             output = f"Score: {self.score}"
             arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
+
+    def draw_winner_page(self):
+        """
+        Load image of winner page
+        """
+        arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
+                                      SCREEN_WIDTH,
+                                      SCREEN_HEIGHT, self.winner, 0)
 
     def draw(self):
         """ Draw everything """
@@ -463,7 +465,7 @@ class MyGame(arcade.Window):
         if self.current_state == GAMEPLAY_1:
 
             arcade.draw_texture_rectangle(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2,
-                                      SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
+                                          SCREEN_WIDTH, SCREEN_HEIGHT, self.background)
 
             # Timer
             minutes = int(self.total_time) // 60
@@ -478,6 +480,7 @@ class MyGame(arcade.Window):
             self.fish_list.draw()
             self.shooting_list.draw()
             self.rock_list.draw()
+            self.shooting2_list.draw()
 
             # put the text on the screen
             output = f"Score: {self.score}"
@@ -515,40 +518,53 @@ class MyGame(arcade.Window):
             self.rain_list.draw()
             self.shooting2_list.draw()
 
-            if self.lives == 0 or self.total_time < 0.1 and self.score < 30:
+            if self.lives == 0 or self.total_time < 0.1 and self.score < 25:
                 self.current_state = GAMEOVER
 
-            elif self.total_time < 0.1 and len(self.snowflake_list_list) == 0 or \
-                    self.total_time < 0.1 and self.score >= 30:
+            elif self.total_time < 0.1 and len(self.snowflake_list) == 0 or \
+                    self.total_time < 0.1 and self.score >= 25:
                 self.current_state = WINNER
 
     def on_key_press(self, key, modifiers):
         if self.current_state == GAMEPLAY_1:
-            # Pull down the apple to the ground
-            if key == arcade.key.UP:
+            # Move seal and keep from leaving border
+            if key == arcade.key.UP and self.player_sprite.center_y <= 730:
                 self.player_sprite.center_y += 45
+            elif key == arcade.key.UP and self.player_sprite.center_y >= 730:
+                self.player_sprite.center_y += 0
+                os.system("afplay border.mp3&")
 
-            if key == arcade.key.LEFT:
+            if key == arcade.key.LEFT and self.player_sprite.center_x >= 50:
                 self.player_sprite.center_x -= 45
+            elif key == arcade.key.LEFT and self.player_sprite.center_x <= 50:
+                self.player_sprite.center_x += 0
+                os.system("afplay border.mp3&")
 
-            if key == arcade.key.RIGHT:
+            if key == arcade.key.RIGHT and self.player_sprite.center_x <= 1150:
                 self.player_sprite.center_x += 45
+            elif key == arcade.key.RIGHT and self.player_sprite.center_x >= 1150:
+                self.player_sprite.center_x += 0
+                os.system("afplay border.mp3&")
 
-            if key == arcade.key.DOWN:
+            if key == arcade.key.DOWN and self.player_sprite.center_y >= 0:
                 self.player_sprite.center_y -= 45
+            elif key == arcade.key.DOWN and self.player_sprite.center_y <= 0:
+                self.player_sprite.center_y += 0
+                os.system("afplay border.mp3&")
 
         elif self.current_state == GAMEPLAY_2:
-            if key == arcade.key.UP:
-                self.player_sprite2.center_y += 45
-
-            if key == arcade.key.LEFT:
+            # allow eskimo to move left and right
+            if key == arcade.key.LEFT and self.player_sprite2.center_x >= 50:
                 self.player_sprite2.center_x -= 45
+            elif key == arcade.key.LEFT and self.player_sprite2.center_x <= 50:
+                self.player_sprite2.center_x += 0
+                os.system("afplay border.mp3&")
 
-            if key == arcade.key.RIGHT:
+            if key == arcade.key.RIGHT and self.player_sprite2.center_x <= 1170:
                 self.player_sprite2.center_x += 45
-
-            if key == arcade.key.DOWN:
-                self.player_sprite2.center_y -= 45
+            elif key == arcade.key.RIGHT and self.player_sprite2.center_x >= 1170:
+                self.player_sprite2.center_x += 0
+                os.system("afplay border.mp3&")
 
         # Use space key to move to the following state
         if key == arcade.key.SPACE:
@@ -640,48 +656,17 @@ class MyGame(arcade.Window):
 
             for rain in rain_hit_list:
                 rain.kill()
-                self.rain -= 1
-
-            self.shooting2_list.update()
-
-            # Loop through each shot
-            for shoot2 in self.shooting_list:
-
-                # Check if rain is hit
-                hit_list = arcade.check_for_collision_with_list(shoot2, self.rain_list)
-
-                # Remove pieces of rain that are hit
-                if len(hit_list) > 0:
-                    shoot2.kill()
-
-                # Adjust score
-                for rain in hit_list:
-                    rain.kill()
-                    self.score += 1
-
-                # If the shot flies off-screen, remove it.
-                if shoot2.bottom > SCREEN_HEIGHT:
-                    shoot2.kill()
-
-            for rain in self.rain_list:
-
-                # Find when rain is hit
-                hit_list = arcade.check_for_collision(rain, self.player_sprite2)
-
-                # Adjust lives and play sound
-                if hit_list == True:
-                    self.lives2 -= 1
-                    rain.kill()
+                self.lives -= 1
 
             self.shooting2_list.update()
 
             # Loop through each shot
             for shoot in self.shooting2_list:
 
-                # Check if trash is hit
+                # Check if rain is hit
                 hit_list = arcade.check_for_collision_with_list(shoot, self.rain_list)
 
-                # Remove pieces of trash that are hit
+                # Remove pieces of rain that are hit
                 if len(hit_list) > 0:
                     shoot.kill()
 
@@ -728,7 +713,6 @@ class MyGame(arcade.Window):
 
         if self.current_state == INSTRUCTION_PAGE:
             self.draw_instructions_page()
-            self.setup
 
         elif self.current_state == GAMEPLAY_1:
             self.draw()
