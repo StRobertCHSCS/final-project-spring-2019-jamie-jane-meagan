@@ -10,25 +10,28 @@ SPRITE_SCALING_TRASH = 0.08
 SPRITE_SCALING_FISH = 0.1
 SPRITE_SCALING_SHOOTER = 0.01
 SPRITE_SCALING_ESKIMO = 0.3
-SPRITE_SCALING_SNOWFLAKE = 0.4
+SPRITE_SCALING_SNOWFLAKE = 0.2
+SPRITE_SCALING_RAIN = 0.1
+SPRITE_SCALING_SHOOTER2 = 0.02
 
 SHRIMPS_COUNT = 30
 TRASH_COUNT = 15
 FISH_COUNT = 2
 ROCK_COUNT = 3
 SNOWFLAKE_COUNT = 20
+RAIN_COUNT = 10
 
 SCREEN_WIDTH = 1250
 SCREEN_HEIGHT = 800
 
 SHOOT_SPEED = 5
+SHOOT_SPEED2 = 6
 
 INSTRUCTION_PAGE = 0
 GAMEPLAY_1 = 1
 GAMEOVER = 2
 TRANSITION_LEV = 3
 GAMEPLAY_2 = 4
-
 
 class Seal(arcade.Sprite):
     def __init__(self, filename, sprite_scaling):
@@ -115,7 +118,6 @@ class Trash(arcade.Sprite):
         if self.top > SCREEN_HEIGHT:
             self.change_y *= -1
 
-
 class Fish(arcade.Sprite):
 
     def __init__(self, filename, sprite_scaling):
@@ -134,7 +136,6 @@ class Fish(arcade.Sprite):
         # reset the fish to a random spot above the screen
         self.center_y = random.randrange(SCREEN_HEIGHT + 20, SCREEN_HEIGHT + 100)
         self.center_x = random.randrange(SCREEN_WIDTH)
-
 
 class Rock(arcade.Sprite):
 
@@ -182,10 +183,32 @@ class Snowflake(arcade.Sprite):
 
     def update(self):
 
-        # Move the coin
+        # Move the snowflake
         self.center_y -= 1
 
-        # See if the coin has fallen off the bottom of the screen.
+        # See if the snowflake has fallen off the bottom of the screen.
+        # If so, reset it.
+        if self.top < 0:
+            self.reset_pos()
+
+class Rain(arcade.Sprite):
+    """
+    This class represents the rain on our screen.
+    """
+
+    def reset_pos(self):
+
+        # Reset the rain to a random spot above the screen
+        self.center_y = random.randrange(SCREEN_HEIGHT + 30,
+                                         SCREEN_HEIGHT + 100)
+        self.center_x = random.randrange(SCREEN_WIDTH)
+
+    def update(self):
+
+        # Move the rain
+        self.center_y -= 1
+
+        # See if the snowflake has fallen off the bottom of the screen.
         # If so, reset it.
         if self.top < 0:
             self.reset_pos()
@@ -217,7 +240,6 @@ class MyGame(arcade.Window):
         self.shooting_list = None
         self.rock_list = None
 
-
         # Set up the player info
         self.player_sprite = None
         self.score = 0
@@ -227,6 +249,8 @@ class MyGame(arcade.Window):
         # variables for the level 2
         self.eskimo_list = None
         self.snowflake_list = None
+        self.rain_list = None
+        self.shooting2_list = None
 
         # set up the player info for level 2
         self.player_sprite2 = None
@@ -248,7 +272,6 @@ class MyGame(arcade.Window):
         texture = arcade.load_texture("images/transition.png")
         self.transition = texture
 
-
     def setup(self):
         """ Set up the game and initialize the variables. """
 
@@ -262,6 +285,7 @@ class MyGame(arcade.Window):
         self.rock_list = arcade.SpriteList()
         self.eskimo_list = arcade.SpriteList()
         self.snowflake_list = arcade.SpriteList()
+        self.rain_list = arcade.SpriteList()
 
         # Score
         self.score = 0
@@ -352,15 +376,28 @@ class MyGame(arcade.Window):
         for i in range(SNOWFLAKE_COUNT):
 
             # Create the snowflake instance
-            # snowflaken image
+            # snowflake image
             snowflake = Snowflake("images/snowflake.png", SPRITE_SCALING_SNOWFLAKE)
 
-            # Position the coin
+            # Position the snowflake
             snowflake.center_x = random.randrange(SCREEN_WIDTH)
             snowflake.center_y = random.randrange(SCREEN_HEIGHT)
 
-            # Add the coin to the lists
+            # Add the snowflake to the lists
             self.snowflake_list.append(snowflake)
+
+        for i in range(RAIN_COUNT):
+
+            # Create the rain instance
+            # rain image
+            rain = Rain("images/rain.png", SPRITE_SCALING_RAIN)
+
+            # Position the rain
+            rain.center_x = random.randrange(SCREEN_WIDTH)
+            rain.center_y = random.randrange(SCREEN_HEIGHT)
+
+            # Add the rain to the lists
+            self.rain_list.append(rain)
 
     def draw_instructions_page(self):
         """
@@ -394,24 +431,24 @@ class MyGame(arcade.Window):
 
         # Add messages depending on game outcome
         if len(self.trash_list) == 0:
-            arcade.draw_text("Sorry you lost:(", 300, 400, arcade.color.RED, 75)
+            arcade.draw_text("Sorry you lost:(", 400, 150, arcade.color.WHITE, 35)
             output = f"Score: {self.score}"
-            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
+            arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
 
         if self.total_time < 0.1:
             arcade.draw_text("Times Up!!!", 375, 400, arcade.color.RED, 75)
             output = f"Score: {self.score}"
-            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
+            arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
 
         elif self.lives < 1:
-            arcade.draw_text("You lost all your lives", 200, 400, arcade.color.RED, 75)
+            arcade.draw_text("You lost all your lives", 400, 150, arcade.color.WHITE, 35)
             output = f"Score: {self.score}"
-            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
+            arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
 
         elif self.lives < 1:
             arcade.draw_text("Your score is too low", 200, 400, arcade.color.RED, 75)
             output = f"Score: {self.score}"
-            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
+            arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
 
     def draw(self):
         """ Draw everything """
@@ -460,9 +497,16 @@ class MyGame(arcade.Window):
             output = f"Time: {minutes:02d}:{seconds:02d}"
             arcade.draw_text(output, 10, 50, arcade.color.BLACK, 17)
 
+            # put the text on the screen
+            output = f"Score: {self.score}"
+            arcade.draw_text(output, 10, 25, arcade.color.WHITE, 17)
+
+            output = f"Lives: {self.lives}"
+            arcade.draw_text(output, 10, 760, arcade.color.WHITE, 17)
+
             self.eskimo_list.draw()
             self.snowflake_list.draw()
-
+            self.rain_list.draw()
 
     def on_key_press(self, key, modifiers):
         if self.current_state == GAMEPLAY_1:
@@ -569,14 +613,19 @@ class MyGame(arcade.Window):
 
         elif self.current_state == GAMEPLAY_2:
             self.snowflake_list.update()
+            self.rain_list.update()
 
             # generate a list of all sprites that collided with the player
             snowflake_hit_list = arcade.check_for_collision_with_list(self.player_sprite2, self.snowflake_list)
+            rain_hit_list = arcade.check_for_collision_with_list(self.player_sprite2, self.rain_list)
 
             for snowflake in snowflake_hit_list:
                 snowflake.kill()
                 self.score += 1
 
+            for rain in rain_hit_list:
+                rain.kill()
+                self.rain -= 1
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
 
@@ -594,7 +643,16 @@ class MyGame(arcade.Window):
             self.shooting_list.append(shooter)
 
         if self.current_state == GAMEPLAY_2:
-            pass
+            # Create another shooter
+            shooter2 = arcade.Sprite("images/laser.png", SPRITE_SCALING_SHOOTER2)
+
+            # Adjust position to match seal
+            shooter2.center_x = self.player_sprite2.center_x
+            shooter2.center_y = self.player_sprite2.center_y
+            shooter2.change_y = SHOOT_SPEED2
+            shooter2.angle = 90
+
+            self.shooting2_list.append(shooter2)
 
     def on_draw(self):
         """
