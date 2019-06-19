@@ -535,9 +535,6 @@ class MyGame(arcade.Window):
                 os.system("afplay border.mp3&")
 
         elif self.current_state == GAMEPLAY_2:
-            if key == arcade.key.UP:
-                self.player_sprite2.center_y += 45
-
             if key == arcade.key.LEFT and self.player_sprite2.center_x >= 50:
                 self.player_sprite2.center_x -= 45
             elif key == arcade.key.LEFT and self.player_sprite2.center_x <= 50:
@@ -549,9 +546,6 @@ class MyGame(arcade.Window):
             elif key == arcade.key.RIGHT and self.player_sprite2.center_x >= 1170:
                 self.player_sprite2.center_x += 0
                 os.system("afplay border.mp3&")
-
-            if key == arcade.key.DOWN:
-                self.player_sprite2.center_y -= 45
 
         # Use space key to move to the following state
         if key == arcade.key.SPACE:
