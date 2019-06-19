@@ -32,10 +32,9 @@ GAMEPLAY_1 = 1
 GAMEOVER = 2
 TRANSITION_LEV = 3
 GAMEPLAY_2 = 4
-<<<<<<< HEAD
-=======
+
 WINNER = 2
->>>>>>> jamie-dev
+
 
 class Seal(arcade.Sprite):
     def __init__(self, filename, sprite_scaling):
@@ -276,12 +275,9 @@ class MyGame(arcade.Window):
         texture = arcade.load_texture("images/transition.png")
         self.transition = texture
 
-<<<<<<< HEAD
-=======
         texture = arcade.load_texture("images/winnerpage.png")
         self.winner = texture
 
->>>>>>> jamie-dev
     def setup(self):
         """ Set up the game and initialize the variables. """
 
@@ -642,11 +638,9 @@ class MyGame(arcade.Window):
                 snowflake.kill()
                 self.score += 1
 
-<<<<<<< HEAD
             for rain in rain_hit_list:
                 rain.kill()
                 self.rain -= 1
-=======
 
             self.shooting2_list.update()
 
@@ -678,8 +672,6 @@ class MyGame(arcade.Window):
                 if hit_list == True:
                     self.lives2 -= 1
                     rain.kill()
-
->>>>>>> jamie-dev
 
             self.shooting2_list.update()
 
