@@ -32,6 +32,7 @@ GAMEPLAY_1 = 1
 GAMEOVER = 2
 TRANSITION_LEV = 3
 GAMEPLAY_2 = 4
+WINNER = 2
 
 class Seal(arcade.Sprite):
     def __init__(self, filename, sprite_scaling):
@@ -272,12 +273,9 @@ class MyGame(arcade.Window):
         texture = arcade.load_texture("images/transition.png")
         self.transition = texture
 
-<<<<<<< HEAD
-=======
-        #texture = arcade.load_texture("")
-        #self.winner = texture
+        texture = arcade.load_texture("images/winnerpage.png")
+        self.winner = texture
 
->>>>>>> 1d09913da04d45a04db9575eb54ec9aac3593217
     def setup(self):
         """ Set up the game and initialize the variables. """
 
