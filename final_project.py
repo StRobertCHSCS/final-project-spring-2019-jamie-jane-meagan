@@ -643,6 +643,7 @@ class MyGame(arcade.Window):
         elif self.current_state == GAMEPLAY_2:
             self.snowflake_list.update()
             self.rain_list.update()
+            self.total_time -= delta_time
 
             # generate a list of all sprites that collided with the player
             snowflake_hit_list = arcade.check_for_collision_with_list(self.player_sprite2, self.snowflake_list)
