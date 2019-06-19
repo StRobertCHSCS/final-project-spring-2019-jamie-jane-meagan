@@ -509,18 +509,26 @@ class MyGame(arcade.Window):
 
     def on_key_press(self, key, modifiers):
         if self.current_state == GAMEPLAY_1:
-            # Pull down the apple to the ground
-            if key == arcade.key.UP:
-                self.player_sprite.center_y += 45
+            # Move seal and keep from leaving border
+            if key == arcade.key.UP and self.player_sprite.center_y <= 730:
+                    self.player_sprite.center_y += 45
+            else:
+                self.player_sprite.center_y += 0
 
-            if key == arcade.key.LEFT:
+            if key == arcade.key.LEFT and self.player_sprite.center_x >= 50:
                 self.player_sprite.center_x -= 45
+            else:
+                self.player_sprite.center_x += 0
 
-            if key == arcade.key.RIGHT:
+            if key == arcade.key.RIGHT and self.player_sprite.center_x <= 1150:
                 self.player_sprite.center_x += 45
+            else:
+                self.player_sprite.center_x += 0
 
-            if key == arcade.key.DOWN:
+            if key == arcade.key.DOWN and self.player_sprite.center_y >= 0:
                 self.player_sprite.center_y -= 45
+            else:
+                self.player_sprite.center_y += 0
 
         elif self.current_state == GAMEPLAY_2:
             if key == arcade.key.UP:
