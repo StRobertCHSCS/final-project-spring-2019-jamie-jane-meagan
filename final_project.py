@@ -60,6 +60,7 @@ class Seal(arcade.Sprite):
         if self.top > SCREEN_HEIGHT:
             self.change_y *= -1
 
+
 class Shrimps(arcade.Sprite):
 
     def __init__(self, filename, sprite_scaling):
@@ -120,6 +121,7 @@ class Trash(arcade.Sprite):
         if self.top > SCREEN_HEIGHT:
             self.change_y *= -1
 
+
 class Fish(arcade.Sprite):
 
     def __init__(self, filename, sprite_scaling):
@@ -139,12 +141,14 @@ class Fish(arcade.Sprite):
         self.center_y = random.randrange(SCREEN_HEIGHT + 20, SCREEN_HEIGHT + 100)
         self.center_x = random.randrange(SCREEN_WIDTH)
 
+
 class Rock(arcade.Sprite):
 
     def __init__(self, filename, sprite_scaling):
         super().__init__(filename, sprite_scaling)
         self.pos_x = [180, 1100, 243]
         self.pos_y = [85, 220, 38]
+
 
 class Eskimo(arcade.Sprite):
     def __init__(self, filename, sprite_scaling):
@@ -171,6 +175,7 @@ class Eskimo(arcade.Sprite):
         if self.top > SCREEN_HEIGHT:
             self.change_y *= -1
 
+
 class Snowflake(arcade.Sprite):
     """
     This class represents the snowflake on our screen.
@@ -193,6 +198,7 @@ class Snowflake(arcade.Sprite):
         if self.top < 0:
             self.reset_pos()
 
+
 class Rain(arcade.Sprite):
     """
     This class represents the rain on our screen.
@@ -214,6 +220,7 @@ class Rain(arcade.Sprite):
         # If so, reset it.
         if self.top < 0:
             self.reset_pos()
+
 
 class MyGame(arcade.Window):
     """ Our custom Window Class"""
@@ -730,6 +737,7 @@ class MyGame(arcade.Window):
 
         elif self.current_state == GAMEPLAY_2:
             self.draw()
+
 
 def main():
     """ Main method """
