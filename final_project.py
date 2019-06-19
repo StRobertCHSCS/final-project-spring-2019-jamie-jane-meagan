@@ -653,10 +653,12 @@ class MyGame(arcade.Window):
             for snowflake in snowflake_hit_list:
                 snowflake.kill()
                 self.score += 1
+                os.system("afplay snow.mp3&")
 
             for rain in rain_hit_list:
                 rain.kill()
                 self.lives -= 1
+                os.system("afplay rain.wav&")
 
             self.shooting2_list.update()
 
