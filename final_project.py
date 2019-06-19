@@ -9,6 +9,7 @@ SPRITE_SCALING_SHRIMPS = 0.2
 SPRITE_SCALING_TRASH = 0.08
 SPRITE_SCALING_FISH = 0.1
 SPRITE_SCALING_SHOOTER = 0.01
+SPRITE_SCALING_ESKIMO = 0.3
 
 SHRIMPS_COUNT = 30
 TRASH_COUNT = 15
@@ -51,7 +52,6 @@ class Seal(arcade.Sprite):
 
         if self.top > SCREEN_HEIGHT:
             self.change_y *= -1
-
 
 class Shrimps(arcade.Sprite):
 
@@ -141,6 +141,30 @@ class Rock(arcade.Sprite):
         self.pos_x = [180, 1100, 243]
         self.pos_y = [85, 220, 38]
 
+class Eskimo(arcade.Sprite):
+    def __init__(self, filename, sprite_scaling):
+        super().__init__(filename, sprite_scaling)
+
+        self.change_x = 0
+        self.change_y = 0
+
+    def update(self):
+        # Move the eskimo
+        self.center_x += self.change_x
+        self.center_y += self.change_y
+
+        # If we are out-of-bounds, then 'bounce'
+        if self.left < 0:
+            self.change_x *= -1
+
+        if self.right > SCREEN_WIDTH:
+            self.change_x *= -1
+
+        if self.bottom < 0:
+            self.change_y *= -1
+
+        if self.top > SCREEN_HEIGHT:
+            self.change_y *= -1
 
 class MyGame(arcade.Window):
     """ Our custom Window Class"""
@@ -168,11 +192,13 @@ class MyGame(arcade.Window):
         self.fish_list = None
         self.shooting_list = None
         self.rock_list = None
+        self.eskimo_list = None
 
         # Set up the player info
         self.player_sprite = None
         self.score = 0
         self.lives = 3
+        self.player_sprite2 = None
 
         # Don't show the mouse cursor
         self.set_mouse_visible(True)
@@ -201,6 +227,7 @@ class MyGame(arcade.Window):
         self.fish_list = arcade.SpriteList()
         self.shooting_list = arcade.SpriteList()
         self.rock_list = arcade.SpriteList()
+        self.eskimo_list = arcade.SpriteList()
 
         # Score
         self.score = 0
@@ -217,6 +244,12 @@ class MyGame(arcade.Window):
         self.player_sprite.center_x = 1150
         self.player_sprite.center_y = 100
         self.seal_list.append(self.player_sprite)
+
+        # set the second player for the level
+        self.player_sprite2 = arcade.Sprite("images/eskimo.png", SPRITE_SCALING_ESKIMO)
+        self.player_sprite2.center_x = 30
+        self.player_sprite2.center_y = 100
+        self.eskimo_list.append(self.player_sprite2)
 
         # Create the shrimps
         for i in range(SHRIMPS_COUNT):
@@ -370,6 +403,8 @@ class MyGame(arcade.Window):
             output = f"Time: {minutes:02d}:{seconds:02d}"
             arcade.draw_text(output, 10, 50, arcade.color.BLACK, 17)
 
+            self.eskimo_list.draw()
+
     def on_key_press(self, key, modifiers):
         if self.current_state == GAMEPLAY_1:
             # Pull down the apple to the ground
@@ -386,7 +421,18 @@ class MyGame(arcade.Window):
                 self.player_sprite.center_y -= 45
 
         elif self.current_state == GAMEPLAY_2:
-            pass
+            if key == arcade.key.UP:
+                self.player_sprite2.center_y += 45
+
+            if key == arcade.key.LEFT:
+                self.player_sprite2.center_x -= 45
+
+            if key == arcade.key.RIGHT:
+                self.player_sprite2.center_x += 45
+
+            if key == arcade.key.DOWN:
+                self.player_sprite2.center_y -= 45
+
 
         # Use space key to move to the following state
         if key == arcade.key.SPACE:
