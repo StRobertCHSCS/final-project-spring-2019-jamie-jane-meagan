@@ -511,20 +511,16 @@ class MyGame(arcade.Window):
         if self.current_state == GAMEPLAY_1:
             # Pull down the apple to the ground
             if key == arcade.key.UP:
-                if self.player_sprite.center_y < 730:
-                    self.player_sprite.center_y += 45
+                self.player_sprite.center_y += 45
 
             if key == arcade.key.LEFT:
-                if self.player_sprite.center_x > 70:
-                    self.player_sprite.center_x -= 45
+                self.player_sprite.center_x -= 45
 
             if key == arcade.key.RIGHT:
-                if self.player_sprite.center_x < 1190:
-                    self.player_sprite.center_x += 45
+                self.player_sprite.center_x += 45
 
             if key == arcade.key.DOWN:
-                if self.player_sprite.center_y > 60:
-                    self.player_sprite.center_y -= 45
+                self.player_sprite.center_y -= 45
 
         elif self.current_state == GAMEPLAY_2:
             if key == arcade.key.UP:
@@ -628,11 +624,7 @@ class MyGame(arcade.Window):
 
             for rain in rain_hit_list:
                 rain.kill()
-                self.rain -= 1
-<<<<<<< HEAD
-=======
 
->>>>>>> jamie-dev
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
 
