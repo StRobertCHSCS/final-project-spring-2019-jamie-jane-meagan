@@ -290,6 +290,7 @@ class MyGame(arcade.Window):
         self.eskimo_list = arcade.SpriteList()
         self.snowflake_list = arcade.SpriteList()
         self.rain_list = arcade.SpriteList()
+        self.shooting2_list = arcade.SpriteList()
 
         # Score
         self.score = 0
@@ -514,6 +515,7 @@ class MyGame(arcade.Window):
             self.eskimo_list.draw()
             self.snowflake_list.draw()
             self.rain_list.draw()
+            self.shooting2_list.draw()
 
             if self.lives == 0 or self.total_time < 0.1 and self.score < 30:
                 self.current_state = GAMEOVER
@@ -653,6 +655,24 @@ class MyGame(arcade.Window):
             for rain in rain_hit_list:
                 rain.kill()
                 self.lives -= 1
+
+            self.shooting2_list.update()
+
+            # Loop through each shot
+            for shoot in self.shooting2_list:
+
+                # Check if trash is hit
+                hit_list = arcade.check_for_collision_with_list(shoot, self.rain_list)
+
+                # Remove pieces of trash that are hit
+                if len(hit_list) > 0:
+                    shoot.kill()
+
+                # Adjust score
+                for rain in hit_list:
+                    rain.kill()
+                    self.score += 5
+                    os.system("afplay shoot.mp3&")
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
 
