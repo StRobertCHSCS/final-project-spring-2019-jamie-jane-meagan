@@ -538,11 +538,17 @@ class MyGame(arcade.Window):
             if key == arcade.key.UP:
                 self.player_sprite2.center_y += 45
 
-            if key == arcade.key.LEFT:
+            if key == arcade.key.LEFT and self.player_sprite2.center_x >= 50:
                 self.player_sprite2.center_x -= 45
+            elif key == arcade.key.LEFT and self.player_sprite2.center_x <= 50:
+                self.player_sprite2.center_x += 0
+                os.system("afplay border.mp3&")
 
-            if key == arcade.key.RIGHT:
+            if key == arcade.key.RIGHT and self.player_sprite2.center_x <= 1170:
                 self.player_sprite2.center_x += 45
+            elif key == arcade.key.RIGHT and self.player_sprite2.center_x >= 1170:
+                self.player_sprite2.center_x += 0
+                os.system("afplay border.mp3&")
 
             if key == arcade.key.DOWN:
                 self.player_sprite2.center_y -= 45
@@ -675,7 +681,6 @@ class MyGame(arcade.Window):
 
         if self.current_state == INSTRUCTION_PAGE:
             self.draw_instructions_page()
-            self.setup
 
         elif self.current_state == GAMEPLAY_1:
             self.draw()
