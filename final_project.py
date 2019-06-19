@@ -10,11 +10,13 @@ SPRITE_SCALING_TRASH = 0.08
 SPRITE_SCALING_FISH = 0.1
 SPRITE_SCALING_SHOOTER = 0.01
 SPRITE_SCALING_ESKIMO = 0.3
+SPRITE_SCALING_SNOWFLAKE = 0.4
 
 SHRIMPS_COUNT = 30
 TRASH_COUNT = 15
 FISH_COUNT = 2
 ROCK_COUNT = 3
+SNOWFLAKE_COUNT = 20
 
 SCREEN_WIDTH = 1250
 SCREEN_HEIGHT = 800
@@ -166,6 +168,28 @@ class Eskimo(arcade.Sprite):
         if self.top > SCREEN_HEIGHT:
             self.change_y *= -1
 
+class Snowflake(arcade.Sprite):
+    """
+    This class represents the snowflake on our screen.
+    """
+
+    def reset_pos(self):
+
+        # Reset the snowflake to a random spot above the screen
+        self.center_y = random.randrange(SCREEN_HEIGHT + 20,
+                                         SCREEN_HEIGHT + 100)
+        self.center_x = random.randrange(SCREEN_WIDTH)
+
+    def update(self):
+
+        # Move the coin
+        self.center_y -= 1
+
+        # See if the coin has fallen off the bottom of the screen.
+        # If so, reset it.
+        if self.top < 0:
+            self.reset_pos()
+
 class MyGame(arcade.Window):
     """ Our custom Window Class"""
 
@@ -192,13 +216,22 @@ class MyGame(arcade.Window):
         self.fish_list = None
         self.shooting_list = None
         self.rock_list = None
-        self.eskimo_list = None
+
 
         # Set up the player info
         self.player_sprite = None
         self.score = 0
         self.lives = 3
+
+        # Level 2
+        # variables for the level 2
+        self.eskimo_list = None
+        self.snowflake_list = None
+
+        # set up the player info for level 2
         self.player_sprite2 = None
+        self.score2 = 0
+        self.lives2 = 3
 
         # Don't show the mouse cursor
         self.set_mouse_visible(True)
@@ -228,6 +261,7 @@ class MyGame(arcade.Window):
         self.shooting_list = arcade.SpriteList()
         self.rock_list = arcade.SpriteList()
         self.eskimo_list = arcade.SpriteList()
+        self.snowflake_list = arcade.SpriteList()
 
         # Score
         self.score = 0
@@ -237,6 +271,16 @@ class MyGame(arcade.Window):
 
         # Lives
         self.lives = 3
+
+        # level 2
+        # score
+        self.score2 = 0
+
+        # timer
+        self.total_time = 25.0
+
+        # lives
+        self.lives2 = 3
 
         # Set up the player
         # Character images
@@ -304,6 +348,19 @@ class MyGame(arcade.Window):
             rock.center_y = rock.pos_y[i]
 
             self.rock_list.append(rock)
+
+        for i in range(SNOWFLAKE_COUNT):
+
+            # Create the snowflake instance
+            # snowflaken image
+            snowflake = Snowflake("images/snowflake.png", SPRITE_SCALING_SNOWFLAKE)
+
+            # Position the coin
+            snowflake.center_x = random.randrange(SCREEN_WIDTH)
+            snowflake.center_y = random.randrange(SCREEN_HEIGHT)
+
+            # Add the coin to the lists
+            self.snowflake_list.append(snowflake)
 
     def draw_instructions_page(self):
         """
@@ -404,6 +461,8 @@ class MyGame(arcade.Window):
             arcade.draw_text(output, 10, 50, arcade.color.BLACK, 17)
 
             self.eskimo_list.draw()
+            self.snowflake_list.draw()
+
 
     def on_key_press(self, key, modifiers):
         if self.current_state == GAMEPLAY_1:
@@ -432,7 +491,6 @@ class MyGame(arcade.Window):
 
             if key == arcade.key.DOWN:
                 self.player_sprite2.center_y -= 45
-
 
         # Use space key to move to the following state
         if key == arcade.key.SPACE:
@@ -510,7 +568,15 @@ class MyGame(arcade.Window):
                     os.system("afplay rock.mp3&")
 
         elif self.current_state == GAMEPLAY_2:
-            pass
+            self.snowflake_list.update()
+
+            # generate a list of all sprites that collided with the player
+            snowflake_hit_list = arcade.check_for_collision_with_list(self.player_sprite2, self.snowflake_list)
+
+            for snowflake in snowflake_hit_list:
+                snowflake.kill()
+                self.score += 1
+
 
     def on_mouse_press(self, x: float, y: float, button: int, modifiers: int):
 
