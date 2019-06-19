@@ -436,7 +436,7 @@ class MyGame(arcade.Window):
 
         # Add messages depending on game outcome
         if self.total_time < 0.1:
-            arcade.draw_text("Times Up!!!", 375, 400, arcade.color.RED, 75)
+            arcade.draw_text("Times Up!!!", 375, 160, arcade.color.RED, 75)
             output = f"Score: {self.score}"
             arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
 
