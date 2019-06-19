@@ -512,23 +512,27 @@ class MyGame(arcade.Window):
             # Move seal and keep from leaving border
             if key == arcade.key.UP and self.player_sprite.center_y <= 730:
                     self.player_sprite.center_y += 45
-            else:
+            elif key == arcade.key.UP and self.player_sprite.center_y >= 730:
                 self.player_sprite.center_y += 0
+                os.system("afplay border.mp3&")
 
             if key == arcade.key.LEFT and self.player_sprite.center_x >= 50:
                 self.player_sprite.center_x -= 45
-            else:
+            elif key == arcade.key.LEFT and self.player_sprite.center_x <= 50:
                 self.player_sprite.center_x += 0
+                os.system("afplay border.mp3&")
 
             if key == arcade.key.RIGHT and self.player_sprite.center_x <= 1150:
                 self.player_sprite.center_x += 45
-            else:
+            elif key == arcade.key.RIGHT and self.player_sprite.center_x >= 1150:
                 self.player_sprite.center_x += 0
+                os.system("afplay border.mp3&")
 
             if key == arcade.key.DOWN and self.player_sprite.center_y >= 0:
                 self.player_sprite.center_y -= 45
-            else:
+            elif key == arcade.key.DOWN and self.player_sprite.center_y <= 0:
                 self.player_sprite.center_y += 0
+                os.system("afplay border.mp3&")
 
         elif self.current_state == GAMEPLAY_2:
             if key == arcade.key.UP:
