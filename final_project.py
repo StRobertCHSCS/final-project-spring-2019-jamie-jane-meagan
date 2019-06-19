@@ -10,7 +10,7 @@ SPRITE_SCALING_TRASH = 0.08
 SPRITE_SCALING_FISH = 0.1
 SPRITE_SCALING_SHOOTER = 0.01
 SPRITE_SCALING_ESKIMO = 0.3
-SPRITE_SCALING_SNOWFLAKE = 0.4
+SPRITE_SCALING_SNOWFLAKE = 0.2
 
 SHRIMPS_COUNT = 30
 TRASH_COUNT = 15
@@ -396,22 +396,22 @@ class MyGame(arcade.Window):
         if len(self.trash_list) == 0:
             arcade.draw_text("Sorry you lost:(", 300, 400, arcade.color.RED, 75)
             output = f"Score: {self.score}"
-            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
+            arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
 
         if self.total_time < 0.1:
             arcade.draw_text("Times Up!!!", 375, 400, arcade.color.RED, 75)
             output = f"Score: {self.score}"
-            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
+            arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
 
         elif self.lives < 1:
-            arcade.draw_text("You lost all your lives", 200, 400, arcade.color.RED, 75)
+            arcade.draw_text("You lost all your lives", 400, 150, arcade.color.WHITE, 35)
             output = f"Score: {self.score}"
-            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
+            arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
 
         elif self.lives < 1:
             arcade.draw_text("Your score is too low", 200, 400, arcade.color.RED, 75)
             output = f"Score: {self.score}"
-            arcade.draw_text(output, 600, 70, arcade.color.WHITE, 30)
+            arcade.draw_text(output, 570, 70, arcade.color.WHITE, 30)
 
     def draw(self):
         """ Draw everything """
